@@ -38,20 +38,24 @@ class Display:
 
   def show(self):
     print()
-    Display.print_col_indices()
+    Display._print_col_indices()
     for row in range(Board.ROWS - 1, -1, -1):
       print(row + 1, end=' ')
       for col in range(Board.COLS):
         piece = self._board.get_piece(row, col)
-        code = ' ' if piece is None else _UNICODES[piece.name()][piece.color()]
-        print(code, end='')
-      print()
-    Display.print_col_indices()
+        code = Display._get_square(row, col) if piece is None else _UNICODES[piece.name()][piece.color()]
+        print(code, end=' ')
+      print(row + 1)
+    Display._print_col_indices()
     print()
 
   @staticmethod
-  def print_col_indices():
+  def _get_square(row, col):
+    return ' ' if (row + col) % 2 == 0 else chr(0x00B7)
+
+  @staticmethod
+  def _print_col_indices():
     print('  ', end='')
-    for col in range(0, 8):
-      print(chr(ord('A') + col), end='')
+    for col in range(Board.COLS):
+      print(chr(ord('A') + col), end=' ')
     print()
