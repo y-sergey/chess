@@ -1,6 +1,8 @@
 from chess.console.display import Display
 from chess.game.game import Game
 from chess.game.square import Square
+from chess.game.board import Rank
+from chess.game.board import File
 
 
 def get_file(pos):
@@ -8,13 +10,27 @@ def get_file(pos):
 
 
 def get_rank(pos):
-    return int(pos) - 1
+    return ord(pos.lower()) - ord('1')
 
 
-def run_move(game, text):
-    pos_from = Square(file=get_file(text[0]), rank=get_rank(text[1]))
-    pos_to = Square(file=get_file(text[2]), rank=get_rank(text[3]))
-    return game.move(pos_from, pos_to)
+def run_move(game, move_text):
+    if len(move_text) != 4:
+        return False
+    src_file = get_file(move_text[0])
+    src_rank = get_rank(move_text[1])
+    dst_file = get_file(move_text[2])
+    dst_rank = get_rank(move_text[3])
+
+    for rank in [src_rank, dst_rank]:
+        if not Rank.RANK_1.value <= rank <= Rank.RANK_8.value:
+            return False
+    for file in [src_file, dst_file]:
+        if not File.FILE_A.value <= file <= File.FILE_H.value:
+            return False
+
+    src = Square(file=src_file, rank=src_rank)
+    dst = Square(file=dst_file, rank=dst_rank)
+    return game.move(src, dst)
 
 
 def run_game():
@@ -45,9 +61,9 @@ def run_game():
         if text == 'exit':
             break
         result = run_move(game, text)
+        display.show()
         if not result:
             print(f'Move \'{text}\' is illegal')
-        display.show()
 
 
 if __name__ == '__main__':
