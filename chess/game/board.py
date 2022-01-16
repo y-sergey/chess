@@ -8,10 +8,31 @@ from chess.game.queen import Queen
 from chess.game.rook import Rook
 from chess.game.square import Square
 
+from enum import Enum
+from enum import unique
+
+
+@unique
+class Rank(Enum):
+    RANK_1 = 0
+    RANK_2 = 1
+    RANK_3 = 2
+    RANK_4 = 3
+    RANK_5 = 4
+    RANK_6 = 5
+    RANK_7 = 6
+    RANK_8 = 7
+
+
+@unique
+class File(Enum):
+    FILE_A = 0
+    FILE_H = 7
+
 
 class Board:
-    ROWS = 8
-    COLS = 8
+    NUM_RANKS = 8
+    NUM_FILES = 8
 
     def __init__(self):
         self._pieces = [[None for _ in range(8)] for _ in range(8)]
@@ -43,3 +64,6 @@ class Board:
 
     def remove_piece(self, square: Square):
         self.set_piece(square, None)
+
+    def has_piece(self, square: Square):
+        return self.get_piece(square) is not None
