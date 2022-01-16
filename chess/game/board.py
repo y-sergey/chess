@@ -67,3 +67,17 @@ class Board:
 
     def has_piece(self, square: Square):
         return self.get_piece(square) is not None
+
+    def has_pieces_between(self, src: Square, dst: Square):
+        rank_diff = dst.rank - src.rank
+        file_diff = dst.file - src.file
+
+        rank_step = rank_diff // max(abs(rank_diff), 1)
+        file_step = file_diff // max(abs(file_diff), 1)
+        square = Square(file=src.file + file_step, rank=src.rank + rank_step)
+
+        while square != dst:
+            if self.has_piece(square):
+                return True
+            square = Square(file=square.file + file_step, rank=square.rank + rank_step)
+        return False
