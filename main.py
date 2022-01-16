@@ -1,5 +1,6 @@
-from chess.game.board import Board
 from chess.console.display import Display
+from chess.game.board import Board
+from chess.game.game import Game
 from chess.game.square import Square
 
 
@@ -12,18 +13,23 @@ def get_rank(pos):
 
 
 def run_game():
-    board = Board()
-    display = Display(board)
+    game = Game()
+    display = Display(game.board())
     display.show()
 
     while True:
-        text = input('Make a move or type "exit" to exit: ').strip().lower()
+        player = game.current_player().name
+        prompt = f'{player} to play. Make a move or type "exit" to exit: '
+        text = input(prompt).strip().lower()
         if text == 'exit':
             break
-        pos_from = Square(file=get_file(text[0]), rank=get_rank(text[1]))
+
+        pos_from = Square(file=get_file(text[0]), rane2e4k=get_rank(text[1]))
         pos_to = Square(file=get_file(text[2]), rank=get_rank(text[3]))
-        board.move(pos_from, pos_to)
+        move_ok = game.move(pos_from, pos_to)
         display.show()
+        if not move_ok:
+            print(f'Move \'{text}\' is illegal')
 
 
 if __name__ == '__main__':

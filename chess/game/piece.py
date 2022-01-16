@@ -6,9 +6,6 @@ class Piece:
     QUEEN = 'Q'
     KING = 'K'
 
-    BLACK = 'BLACK'
-    WHITE = 'WHITE'
-
     def __init__(self, name, color):
         self._name = name
         self._color = color
