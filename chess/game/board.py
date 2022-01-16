@@ -5,6 +5,7 @@ from chess.game.knight import Knight
 from chess.game.pawn import Pawn
 from chess.game.queen import Queen
 from chess.game.rook import Rook
+from chess.game.square import Square
 
 
 class Board:
@@ -36,19 +37,7 @@ class Board:
     def get_piece(self, row, col):
         return self._pieces[row][col]
 
-    def move(self, pos_from: str, pos_to: str):
-        from_row = Board.get_row(pos_from)
-        from_col = Board.get_col(pos_from)
-        to_row = Board.get_row(pos_to)
-        to_col = Board.get_col(pos_to)
-        piece = self.get_piece(from_row, from_col)
-        self._pieces[from_row][from_col] = None
-        self._pieces[to_row][to_col] = piece
-
-    @staticmethod
-    def get_col(pos):
-        return ord(pos[0].lower()) - ord('a')
-
-    @staticmethod
-    def get_row(pos):
-        return int(pos[1]) - 1
+    def move(self, pos_from: Square, pos_to: Square):
+        piece = self.get_piece(pos_from.rank, pos_from.file)
+        self._pieces[pos_from.rank][pos_from.file] = None
+        self._pieces[pos_to.rank][pos_to.file] = piece
