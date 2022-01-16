@@ -30,7 +30,9 @@ def run_game():
                      'a3e3', 'g7g5',
                      'e3e4', 'd8d7',
                      'd1h5', 'e8d8',
-                     'e1e2']
+                     'e1e2', 'd7d6',
+                     'g1f3', 'b8d7']
+
     for move in initial_moves:
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
@@ -46,7 +48,6 @@ def run_game():
         if not result:
             print(f'Move \'{text}\' is illegal')
         display.show()
-
 
 
 if __name__ == '__main__':
