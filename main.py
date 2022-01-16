@@ -1,5 +1,4 @@
 from chess.console.display import Display
-from chess.game.board import Board
 from chess.game.game import Game
 from chess.game.square import Square
 
@@ -24,7 +23,7 @@ def run_game():
         if text == 'exit':
             break
 
-        pos_from = Square(file=get_file(text[0]), rane2e4k=get_rank(text[1]))
+        pos_from = Square(file=get_file(text[0]), rank=get_rank(text[1]))
         pos_to = Square(file=get_file(text[2]), rank=get_rank(text[3]))
         move_ok = game.move(pos_from, pos_to)
         display.show()
