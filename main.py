@@ -23,7 +23,13 @@ def run_game():
     display.show()
 
     # Some test moves
-    initial_moves = ['e2e4', 'd7d5', 'f1c4', 'a7a6', 'a2a4', 'd5e4', 'a1a3', 'a8a7', 'a3e3', 'g7g5', 'e3e4']
+    initial_moves = ['e2e4', 'd7d5',
+                     'f1c4', 'a7a6',
+                     'a2a4', 'd5e4',
+                     'a1a3', 'a8a7',
+                     'a3e3', 'g7g5',
+                     'e3e4', 'd8d7',
+                     'd1h5']
     for move in initial_moves:
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
@@ -35,9 +41,11 @@ def run_game():
         text = input(prompt).strip().lower()
         if text == 'exit':
             break
-        display.show()
-        if not run_move(game, text):
+        result = run_move(game, text)
+        if not result:
             print(f'Move \'{text}\' is illegal')
+        display.show()
+
 
 
 if __name__ == '__main__':
