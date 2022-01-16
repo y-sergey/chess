@@ -20,4 +20,4 @@ class Piece:
         return self._color
 
     def can_move(self, src: Square, dst: Square, board) -> bool:
-        return
+        return True
