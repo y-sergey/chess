@@ -29,7 +29,8 @@ def run_game():
                      'a1a3', 'a8a7',
                      'a3e3', 'g7g5',
                      'e3e4', 'd8d7',
-                     'd1h5']
+                     'd1h5', 'e8d8',
+                     'e1e2']
     for move in initial_moves:
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
