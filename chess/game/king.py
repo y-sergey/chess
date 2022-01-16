@@ -9,4 +9,6 @@ class King(Piece):
     def can_move(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = abs(dst.rank - src.rank)
         file_diff = abs(dst.file - src.file)
-        return rank_diff == 0 and file_diff == 1 or file_diff == 0 and rank_diff == 1
+        return (rank_diff == 0 and file_diff == 1
+                or file_diff == 0 and rank_diff == 1
+                or file_diff == 1 and rank_diff == 1)

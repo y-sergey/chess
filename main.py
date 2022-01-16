@@ -47,7 +47,8 @@ def run_game():
                      'e3e4', 'd8d7',
                      'd1h5', 'e8d8',
                      'e1e2', 'd7d6',
-                     'g1f3', 'b8d7']
+                     'g1f3', 'b8d7',
+                     'e2f1']
 
     for move in initial_moves:
         if not run_move(game, move):
