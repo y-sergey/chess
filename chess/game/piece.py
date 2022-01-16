@@ -19,5 +19,5 @@ class Piece:
     def color(self):
         return self._color
 
-    def can_move(self, src: Square, dst: Square, board) -> bool:
+    def can_move(self, src: Square, dst: Square, game_board) -> bool:
         return True
