@@ -1,3 +1,6 @@
+from enum import Enum
+from enum import unique
+
 from chess.game.bishop import Bishop
 from chess.game.color import Color
 from chess.game.king import King
@@ -7,9 +10,6 @@ from chess.game.piece import Piece
 from chess.game.queen import Queen
 from chess.game.rook import Rook
 from chess.game.square import Square
-
-from enum import Enum
-from enum import unique
 
 
 @unique
@@ -27,6 +27,12 @@ class Rank(Enum):
 @unique
 class File(Enum):
     FILE_A = 0
+    FILE_B = 1
+    FILE_C = 2
+    FILE_D = 3
+    FILE_E = 4
+    FILE_F = 5
+    FILE_G = 6
     FILE_H = 7
 
 
@@ -35,6 +41,7 @@ class Board:
     NUM_FILES = 8
 
     def __init__(self):
+        # Outer lists represent ranks (rows). Inner lists represent files (columns).
         self._pieces = [[None for _ in range(8)] for _ in range(8)]
         # Pawns
         for col in range(8):
@@ -56,11 +63,18 @@ class Board:
             # King
             self._pieces[row][4] = King(color)
 
+        self._king_pos = {
+            Color.WHITE: Square(file=File.FILE_E.value, rank=Rank.RANK_1.value),
+            Color.BLACK: Square(file=File.FILE_E.value, rank=Rank.RANK_8.value)
+        }
+
     def get_piece(self, square: Square) -> Piece:
         return self._pieces[square.rank][square.file]
 
     def set_piece(self, square: Square, piece: Piece):
         self._pieces[square.rank][square.file] = piece
+        if piece and piece.name() == Piece.KING:
+            self._king_pos[piece.color()] = square
 
     def remove_piece(self, square: Square):
         self.set_piece(square, None)
@@ -81,3 +95,16 @@ class Board:
                 return True
             square = Square(file=square.file + file_step, rank=square.rank + rank_step)
         return False
+
+    def get_pieces_by_color(self, color: Color):
+        result = []
+        for rank in range(Rank.RANK_1.value, Board.NUM_RANKS):
+            for file in range(File.FILE_A.value, Board.NUM_FILES):
+                square = Square(file=file, rank=rank)
+                piece = self.get_piece(square)
+                if piece and piece.color() == color:
+                    result.append((piece, square))
+        return result
+
+    def get_king_square(self, color: Color):
+        return self._king_pos[color]

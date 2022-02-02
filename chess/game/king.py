@@ -6,7 +6,7 @@ class King(Piece):
     def __init__(self, color):
         Piece.__init__(self, Piece.KING, color)
 
-    def can_move(self, src: Square, dst: Square, game_board) -> bool:
+    def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = abs(dst.rank - src.rank)
         file_diff = abs(dst.file - src.file)
         return (rank_diff == 0 and file_diff == 1

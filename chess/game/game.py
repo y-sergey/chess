@@ -7,6 +7,7 @@ class Game:
     def __init__(self):
         self._board = Board()
         self._turn = Color.WHITE
+        self._is_check = False
 
     def board(self):
         return self._board
@@ -29,6 +30,19 @@ class Game:
 
         self._board.remove_piece(src)
         self._board.set_piece(dst, piece)
+
+        self._is_check = self._is_in_check()
         self._turn = Color.WHITE if self._turn == Color.BLACK else Color.BLACK
 
         return True
+
+    def is_king_in_check(self):
+        return self._is_check
+
+    def _is_in_check(self):
+        opposite_color = Color.opposite(self._turn)
+        king_square = self._board.get_king_square(opposite_color)
+        for piece, square in self._board.get_pieces_by_color(self._turn):
+            if piece.threatens(square, king_square, self._board):
+                return True
+        return False

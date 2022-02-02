@@ -28,7 +28,10 @@ class Pawn(Piece):
                     and not game_board.has_piece(dst)):
                 return True
 
-        # Capture a piece
-        return (dst.rank + src.rank + self._step
+        return self.threatens(src, dst, game_board)
+
+    def threatens(self, src: Square, dst: Square, game_board) -> bool:
+        # A pawn can capture a piece diagonally
+        return (dst.rank == src.rank + self._step
                 and dst.file in [src.file - 1, src.file + 1]
                 and game_board.has_piece(dst))

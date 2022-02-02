@@ -6,10 +6,8 @@ class Rook(Piece):
     def __init__(self, color):
         Piece.__init__(self, Piece.ROOK, color)
 
-    def can_move(self, src: Square, dst: Square, game_board) -> bool:
+    def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank
         file_diff = dst.file - src.file
-        if not (rank_diff == 0 or file_diff == 0):
-            return False
-        return not game_board.has_pieces_between(src, dst)
-
+        same_line = rank_diff == 0 or file_diff == 0
+        return same_line and not game_board.has_pieces_between(src, dst)

@@ -1,8 +1,8 @@
 from chess.console.display import Display
+from chess.game.board import File
+from chess.game.board import Rank
 from chess.game.game import Game
 from chess.game.square import Square
-from chess.game.board import Rank
-from chess.game.board import File
 
 
 def get_file(pos):
@@ -50,13 +50,19 @@ def run_game():
                      'g1f3', 'b8d7',
                      'e2f1']
 
-    for move in initial_moves:
+    for move in []:
+        print(f'\n\nMoving {move}')
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
+        if game.is_king_in_check():
+            raise Exception('Unexpected check')
         display.show()
+        print(f'Last move - {move}')
 
     while True:
         player = game.current_player().name
+        if game.is_king_in_check():
+            print('CHECK ->')
         prompt = f'{player} to play. Make a move or type "exit" to exit: '
         text = input(prompt).strip().lower()
         if text == 'exit':
