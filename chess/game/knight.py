@@ -1,3 +1,6 @@
+from typing import List
+
+from chess.game.move import Move
 from chess.game.piece import Piece
 from chess.game.square import Square
 
@@ -10,3 +13,7 @@ class Knight(Piece):
         rank_diff = abs(dst.rank - src.rank)
         file_diff = abs(dst.file - src.file)
         return (rank_diff, file_diff) in [(1, 2), (2, 1)]
+
+    def get_valid_moves(self, src: Square, game_board) -> List[Move]:
+        rank_and_file_steps = [(-1, -2), (-1, 2), (1, -2), (1, 2), (2, 1), (2, -1), (-2, 1), (-2, -1)]
+        return super()._get_valid_moves_by_steps(src, game_board, rank_and_file_steps)

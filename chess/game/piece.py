@@ -1,3 +1,9 @@
+from typing import List
+from typing import Tuple
+
+from chess.game.constants import File
+from chess.game.constants import Rank
+from chess.game.move import Move
 from chess.game.square import Square
 
 
@@ -33,6 +39,45 @@ class Piece:
         (can capture a piece of the opposite color standing on the 'dst' square).
         """
         return False
+
+    def get_valid_moves(self, src: Square, game_board):
+        """
+        Returns all valid moves for this piece given its position and the board.
+        This method doesn't take it into account that the king currently can be in check
+        or get into check after the move.
+        """
+        return []
+
+    def _search_valid_moves_by_steps(self,
+                                     src: Square,
+                                     game_board,
+                                     rank_and_file_steps: List[Tuple[int, int]]):
+        moves = []
+        for rank_step, file_step in rank_and_file_steps:
+            dest = src.add_file(file_step).add_rank(rank_step)
+            while File.is_valid(dest.file) and Rank.is_valid(dest.rank):
+                target = game_board.get_piece(dest)
+                if target and target.color() == self.color():
+                    break
+                else:
+                    move = Move(source=src, dest=dest, piece=self, captured=target)
+                    moves.append(move)
+                    dest = dest.add_file(file_step).add_rank(rank_step)
+        return moves
+
+    def _get_valid_moves_by_steps(self,
+                                  src: Square,
+                                  game_board,
+                                  rank_and_file_steps: List[Tuple[int, int]]):
+        moves = []
+        for rank_step, file_step in rank_and_file_steps:
+            dest = src.add_file(file_step).add_rank(rank_step)
+            if File.is_valid(dest.file) and Rank.is_valid(dest.rank):
+                target = game_board.get_piece(dest)
+                if not target or target.color() != self.color():
+                    move = Move(source=src, dest=dest, piece=self, captured=target)
+                    moves.append(move)
+        return moves
 
     def __str__(self):
         return f'{self._name} - {self._color.name.lower()}'

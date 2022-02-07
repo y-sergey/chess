@@ -1,5 +1,5 @@
-import chess.game.board as board
 from chess.game.color import Color
+from chess.game.constants import Rank
 from chess.game.piece import Piece
 from chess.game.square import Square
 
@@ -8,12 +8,12 @@ class Pawn(Piece):
     def __init__(self, color: Color):
         Piece.__init__(self, Piece.PAWN, color)
         if color == Color.WHITE:
-            self._start_rank = board.Rank.RANK_2.value
-            self._end_rank = board.Rank.RANK_8.value
+            self._start_rank = Rank.RANK_2.value
+            self._end_rank = Rank.RANK_8.value
             self._step = 1
         else:
-            self._start_rank = board.Rank.RANK_7.value
-            self._end_rank = board.Rank.RANK_1.value
+            self._start_rank = Rank.RANK_7.value
+            self._end_rank = Rank.RANK_1.value
             self._step = -1
 
     def can_move(self, src: Square, dst: Square, game_board) -> bool:

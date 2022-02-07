@@ -1,8 +1,8 @@
-from enum import Enum
-from enum import unique
-
+import chess.game.constants as constants
 from chess.game.bishop import Bishop
 from chess.game.color import Color
+from chess.game.constants import File
+from chess.game.constants import Rank
 from chess.game.king import King
 from chess.game.knight import Knight
 from chess.game.pawn import Pawn
@@ -12,33 +12,7 @@ from chess.game.rook import Rook
 from chess.game.square import Square
 
 
-@unique
-class Rank(Enum):
-    RANK_1 = 0
-    RANK_2 = 1
-    RANK_3 = 2
-    RANK_4 = 3
-    RANK_5 = 4
-    RANK_6 = 5
-    RANK_7 = 6
-    RANK_8 = 7
-
-
-@unique
-class File(Enum):
-    FILE_A = 0
-    FILE_B = 1
-    FILE_C = 2
-    FILE_D = 3
-    FILE_E = 4
-    FILE_F = 5
-    FILE_G = 6
-    FILE_H = 7
-
-
 class Board:
-    NUM_RANKS = 8
-    NUM_FILES = 8
 
     def __init__(self):
         # Outer lists represent ranks (rows). Inner lists represent files (columns).
@@ -98,8 +72,8 @@ class Board:
 
     def get_pieces_by_color(self, color: Color):
         result = []
-        for rank in range(Rank.RANK_1.value, Board.NUM_RANKS):
-            for file in range(File.FILE_A.value, Board.NUM_FILES):
+        for rank in range(Rank.RANK_1.value, constants.NUM_RANKS):
+            for file in range(File.FILE_A.value, constants.NUM_FILES):
                 square = Square(file=file, rank=rank)
                 piece = self.get_piece(square)
                 if piece and piece.color() == color:

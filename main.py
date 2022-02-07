@@ -50,7 +50,7 @@ def run_game():
                      'g1f3', 'b8d7',
                      'e2f1']
 
-    for move in []:
+    for move in initial_moves:
         print(f'\n\nMoving {move}')
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
