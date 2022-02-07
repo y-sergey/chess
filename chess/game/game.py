@@ -9,10 +9,10 @@ class Game:
         self._turn = Color.WHITE
         self._is_check = False
 
-    def board(self):
+    def board(self) -> Board:
         return self._board
 
-    def current_player(self):
+    def current_player(self) -> Color:
         return self._turn
 
     def move(self, src: Square, dst: Square) -> bool:
@@ -36,11 +36,11 @@ class Game:
 
         return True
 
-    def is_king_in_check(self):
+    def is_king_in_check(self) -> bool:
         return self._is_check
 
-    def _is_in_check(self):
-        opposite_color = Color.opposite(self._turn)
+    def _is_in_check(self) -> bool:
+        opposite_color = self._turn.opposite()
         king_square = self._board.get_king_square(opposite_color)
         for piece, square in self._board.get_pieces_by_color(self._turn):
             if piece.threatens(square, king_square, self._board):
