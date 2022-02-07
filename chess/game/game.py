@@ -32,7 +32,7 @@ class Game:
         self._board.set_piece(dst, piece)
 
         self._is_check = self._is_in_check()
-        self._turn = Color.WHITE if self._turn == Color.BLACK else Color.BLACK
+        self._turn = self._turn.opposite()
 
         return True
 
