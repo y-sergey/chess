@@ -1,6 +1,14 @@
+from typing import List
+
+from chess.game.bishop import Bishop
 from chess.game.color import Color
+from chess.game.constants import File
 from chess.game.constants import Rank
+from chess.game.knight import Knight
+from chess.game.move import Move
 from chess.game.piece import Piece
+from chess.game.queen import Queen
+from chess.game.rook import Rook
 from chess.game.square import Square
 
 
@@ -35,3 +43,51 @@ class Pawn(Piece):
         return (dst.rank == src.rank + self._step
                 and dst.file in [src.file - 1, src.file + 1]
                 and game_board.has_piece(dst))
+
+    def get_valid_moves(self, src: Square, game_board) -> List[Move]:
+        step_by_one = src.add_rank(self._step)
+        moves = []
+        can_promote = src.rank == self._end_rank - self._step and not game_board.has_piece(step_by_one)
+        promo_squares = []
+
+        if not game_board.has_piece(step_by_one):
+            if can_promote:
+                promo_squares.append(step_by_one)
+            else:
+                moves.append(Move(source=src, dest=step_by_one, piece=self))
+            if src.rank == self._start_rank:
+                step_by_two = step_by_one.add_rank(self._step)
+                if not game_board.has_piece(step_by_two):
+                    moves.append(Move(source=src, dest=step_by_two, piece=self))
+
+        next_rank = src.rank + self._step
+        left_file = src.file + 1
+        right_file = src.file - 1
+        capture_squares = []
+        if Rank.is_valid(next_rank):
+            files = filter([left_file, right_file], File.is_valid)
+            capture_squares = map(files, lambda f: Square(rank=next_rank, file=f))
+        for square in capture_squares:
+            piece = game_board.get_piece(square)
+            if piece and piece.color() != self.color():
+                if square.rank == self._end_rank:
+                    promo_squares.append(square)
+                else:
+                    moves.append(Move(src=src, dest=square, piece=self, captured=piece))
+
+        moves.extend(self._get_promo_moves(src, promo_squares, game_board))
+        return moves
+
+    def _get_promo_moves(self, src: Square, dest_list: List[Square], game_board) -> List[Move]:
+        moves = []
+        color = self.color()
+        for dest in dest_list:
+            for promo_piece in [Queen(color), Rook(color), Bishop(color), Knight(color)]:
+                moves.append(
+                    Move(
+                        piece=self,
+                        source=src,
+                        dest=dest,
+                        pawn_promotion=promo_piece,
+                        captured=game_board.get_piece(dest)))
+        return moves

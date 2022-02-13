@@ -9,3 +9,4 @@ class Move:
     dest: Square
     piece: 'Piece'
     captured: 'Piece'
+    pawn_promotion_piece: 'Piece'
