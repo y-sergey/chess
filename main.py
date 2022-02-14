@@ -54,14 +54,14 @@ def run_game():
         print(f'\n\nMoving {move}')
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
-        if game.is_king_in_check():
+        if game.is_check():
             raise Exception('Unexpected check')
         display.show()
         print(f'Last move - {move}')
 
     while True:
         player = game.current_player().name
-        if game.is_king_in_check():
+        if game.is_check():
             print('CHECK ->')
         prompt = f'{player} to play. Make a move or type "exit" to exit: '
         text = input(prompt).strip().lower()
