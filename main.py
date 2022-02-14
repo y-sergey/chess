@@ -39,17 +39,31 @@ def run_game():
     display.show()
 
     # Some test moves
-    initial_moves = ['e2e4', 'd7d5',
-                     'f1c4', 'a7a6',
-                     'a2a4', 'd5e4',
-                     'a1a3', 'a8a7',
-                     'a3e3', 'g7g5',
-                     'e3e4', 'd8d7',
-                     'd1h5', 'e8d8',
-                     'e1e2', 'd7d6',
-                     'g1f3', 'b8d7',
-                     'e2f1']
+    initial_moves = [
+        'e2e4', 'd7d5',
+        'f1c4', 'a7a6',
+        'a2a4', 'd5e4',
+        'a1a3', 'a8a7',
+        'a3e3', 'g7g5',
+        'e3e4', 'd8d7',
+        'd1h5', 'e8d8',
+        'e1e2', 'd7d6',
+        'g1f3', 'b8d7',
+        'e2f1'
+    ]
 
+    fools_mate_moves = [
+        'e2e4', 'e7e5',
+        'd1h5', 'a7a6',
+        'f1c4', 'a6a5'
+    ]
+
+    scholar_mate_moves = [
+        'e2e4', 'f7f6',
+        'd2d4', 'g7g5'
+    ]
+
+    initial_moves = scholar_mate_moves
     for move in initial_moves:
         print(f'\n\nMoving {move}')
         if not run_move(game, move):
@@ -61,6 +75,9 @@ def run_game():
 
     while True:
         player = game.current_player().name
+        if game.result():
+            print(f'{game.result().name}! Game over.')
+            break
         if game.is_check():
             print('CHECK ->')
         prompt = f'{player} to play. Make a move or type "exit" to exit: '

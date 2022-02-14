@@ -65,15 +65,15 @@ class Pawn(Piece):
         right_file = src.file - 1
         capture_squares = []
         if Rank.is_valid(next_rank):
-            files = filter([left_file, right_file], File.is_valid)
-            capture_squares = map(files, lambda f: Square(rank=next_rank, file=f))
+            files = filter(File.is_valid, [left_file, right_file])
+            capture_squares = map(lambda f: Square(rank=next_rank, file=f), files)
         for square in capture_squares:
             piece = game_board.get_piece(square)
             if piece and piece.color() != self.color():
                 if square.rank == self._end_rank:
                     promo_squares.append(square)
                 else:
-                    moves.append(Move(src=src, dest=square, piece=self, captured=piece))
+                    moves.append(Move(source=src, dest=square, piece=self, captured=piece))
 
         moves.extend(self._get_promo_moves(src, promo_squares, game_board))
         return moves

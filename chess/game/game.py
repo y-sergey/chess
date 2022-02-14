@@ -1,3 +1,6 @@
+from enum import Enum
+from enum import unique
+
 from chess.game.board import Board
 from chess.game.color import Color
 from chess.game.move import Move
@@ -5,11 +8,18 @@ from chess.game.piece import Piece
 from chess.game.square import Square
 
 
+@unique
+class Result(Enum):
+    CHECKMATE = 1
+    STALEMATE = 2
+
+
 class Game:
     def __init__(self):
         self._board = Board()
         self._turn = Color.WHITE
         self._is_check = False
+        self._result = None
         self._moves = []
 
     def board(self) -> Board:
@@ -44,6 +54,10 @@ class Game:
 
         next_player = self._turn.opposite()
         self._is_check = self._is_king_in_check(next_player)
+        opponent_has_valid_moves = self._has_valid_moves(next_player)
+        if not opponent_has_valid_moves:
+            self._result = Result.CHECKMATE if self._is_check else Result.STALEMATE
+
         self._turn = next_player
 
         return True
@@ -66,5 +80,18 @@ class Game:
                 return True
         return False
 
+    def _has_valid_moves(self, color: Color):
+        for piece, square in self._board.get_pieces_by_color(color):
+            for move in piece.get_valid_moves(square, self._board):
+                self._apply_move(move)
+                is_check = self._is_king_in_check(color)
+                self._undo_move()
+                if not is_check:
+                    return True
+        return False
+
     def is_check(self):
         return self._is_check
+
+    def result(self) -> Result:
+        return self._result
