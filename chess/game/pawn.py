@@ -45,6 +45,7 @@ class Pawn(Piece):
                     and not game_board.has_piece(src.add_rank(self._step))
                     and not game_board.has_piece(dst)):
                 return self._validate_promotion(dst, pawn_promotion_piece)
+            return False
 
         return self.threatens(src, dst, game_board) \
                and self._validate_promotion(dst, pawn_promotion_piece)
