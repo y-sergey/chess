@@ -56,7 +56,7 @@ class Pawn(Piece):
                 and dst.file in [src.file - 1, src.file + 1]
                 and game_board.has_piece(dst))
 
-    def get_valid_moves(self, src: Square, game_board) -> List[Move]:
+    def get_available_moves(self, src: Square, game_board) -> List[Move]:
         step_by_one = src.add_rank(self._step)
         moves = []
         can_promote = src.rank == self._end_rank - self._step and not game_board.has_piece(step_by_one)

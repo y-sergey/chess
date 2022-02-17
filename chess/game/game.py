@@ -82,7 +82,7 @@ class Game:
 
     def _has_valid_moves(self, color: Color):
         for piece, square in self._board.get_pieces_by_color(color):
-            for move in piece.get_valid_moves(square, self._board):
+            for move in piece.get_available_moves(square, self._board):
                 self._apply_move(move)
                 is_check = self._is_king_in_check(color)
                 self._undo_move()

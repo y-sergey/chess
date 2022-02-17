@@ -40,18 +40,18 @@ class Piece:
         """
         return False
 
-    def get_valid_moves(self, src: Square, game_board):
+    def get_available_moves(self, src: Square, game_board):
         """
-        Returns all valid moves for this piece given its position and the board.
+        Returns all available moves for this piece given its position and the board.
         This method doesn't take it into account that the king currently can be in check
         or get into check after the move.
         """
         return []
 
-    def _search_valid_moves_by_steps(self,
-                                     src: Square,
-                                     game_board,
-                                     rank_and_file_steps: List[Tuple[int, int]]):
+    def _search_available_moves_by_steps(self,
+                                         src: Square,
+                                         game_board,
+                                         rank_and_file_steps: List[Tuple[int, int]]):
         moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_file(file_step).add_rank(rank_step)
@@ -65,10 +65,10 @@ class Piece:
                     dest = dest.add_file(file_step).add_rank(rank_step)
         return moves
 
-    def _get_valid_moves_by_steps(self,
-                                  src: Square,
-                                  game_board,
-                                  rank_and_file_steps: List[Tuple[int, int]]):
+    def _get_available_moves_by_steps(self,
+                                      src: Square,
+                                      game_board,
+                                      rank_and_file_steps: List[Tuple[int, int]]):
         moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_file(file_step).add_rank(rank_step)

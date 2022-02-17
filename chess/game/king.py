@@ -16,6 +16,6 @@ class King(Piece):
                 or file_diff == 0 and rank_diff == 1
                 or file_diff == 1 and rank_diff == 1)
 
-    def get_valid_moves(self, src: Square, game_board) -> List[Move]:
+    def get_available_moves(self, src: Square, game_board) -> List[Move]:
         rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
-        return super()._get_valid_moves_by_steps(src, game_board, rank_and_file_steps)
+        return super()._get_available_moves_by_steps(src, game_board, rank_and_file_steps)
