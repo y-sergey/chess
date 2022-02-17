@@ -83,7 +83,7 @@ def run_game():
     ]
 
     initial_moves = scholar_mate_moves
-    for move in initial_moves:
+    for move in []:
         print(f'\n\nMoving {move}')
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')

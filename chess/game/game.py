@@ -40,6 +40,8 @@ class Game:
             return False
         if not piece.can_move(src, dst, self._board, pawn_promotion):
             return False
+        if pawn_promotion and piece.name() != Piece.PAWN:
+            return False
 
         move = Move(
             source=src,
