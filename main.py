@@ -1,8 +1,20 @@
 from chess.console.display import Display
+from chess.game.bishop import Bishop
 from chess.game.board import File
 from chess.game.board import Rank
 from chess.game.game import Game
+from chess.game.knight import Knight
+from chess.game.piece import Piece
+from chess.game.queen import Queen
+from chess.game.rook import Rook
 from chess.game.square import Square
+
+PIECE_CONSTRUCTORS = {
+    Piece.KNIGHT: Knight,
+    Piece.BISHOP: Bishop,
+    Piece.ROOK: Rook,
+    Piece.QUEEN: Queen
+}
 
 
 def get_file(pos):
@@ -13,8 +25,8 @@ def get_rank(pos):
     return ord(pos.lower()) - ord('1')
 
 
-def run_move(game, move_text):
-    if len(move_text) != 4:
+def run_move(game: Game, move_text: str):
+    if not 4 <= len(move_text) <= 5:
         return False
     src_file = get_file(move_text[0])
     src_rank = get_rank(move_text[1])
@@ -22,15 +34,22 @@ def run_move(game, move_text):
     dst_rank = get_rank(move_text[3])
 
     for rank in [src_rank, dst_rank]:
-        if not Rank.RANK_1.value <= rank <= Rank.RANK_8.value:
+        if not Rank.is_valid(rank):
             return False
     for file in [src_file, dst_file]:
-        if not File.FILE_A.value <= file <= File.FILE_H.value:
+        if not File.is_valid(file):
             return False
 
     src = Square(file=src_file, rank=src_rank)
     dst = Square(file=dst_file, rank=dst_rank)
-    return game.move(src, dst)
+    promo_piece = None
+    if len(move_text) == 5:
+        piece_name = move_text[4].upper()
+        constructor = PIECE_CONSTRUCTORS.get(piece_name, None)
+        if not constructor:
+            return False
+        promo_piece = constructor(game.current_player())
+    return game.move(src, dst, pawn_promotion=promo_piece)
 
 
 def run_game():

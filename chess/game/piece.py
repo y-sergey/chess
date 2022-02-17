@@ -25,7 +25,7 @@ class Piece:
     def color(self):
         return self._color
 
-    def can_move(self, src: Square, dst: Square, game_board) -> bool:
+    def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece=None) -> bool:
         """
         Checks if this piece can move from the 'src' square to the 'dst' square.
         For most pieces the logic will be the same as in 'threatens' function,

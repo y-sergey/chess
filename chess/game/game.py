@@ -38,7 +38,7 @@ class Game:
             return False
         if target_piece is not None and target_piece.color() == self._turn:
             return False
-        if not piece.can_move(src, dst, self._board):
+        if not piece.can_move(src, dst, self._board, pawn_promotion):
             return False
 
         move = Move(

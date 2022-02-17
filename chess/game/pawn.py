@@ -11,6 +11,13 @@ from chess.game.queen import Queen
 from chess.game.rook import Rook
 from chess.game.square import Square
 
+_ELIGIBLE_PROMOTION_PIECES = {
+    Piece.KNIGHT,
+    Piece.BISHOP,
+    Piece.ROOK,
+    Piece.QUEEN
+}
+
 
 class Pawn(Piece):
     def __init__(self, color: Color):
@@ -24,19 +31,23 @@ class Pawn(Piece):
             self._end_rank = Rank.RANK_1.value
             self._step = -1
 
-    def can_move(self, src: Square, dst: Square, game_board) -> bool:
+    def end_rank(self):
+        return self._end_rank
+
+    def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
         if src.file == dst.file:
             # Move one step forward
             if src.rank + self._step == dst.rank and not game_board.has_piece(dst):
-                return True
+                return self._validate_promotion(dst, pawn_promotion_piece)
             # Move 2 steps forward from the initial position
             if (src.rank == self._start_rank
                     and dst.rank == src.rank + 2 * self._step
                     and not game_board.has_piece(src.add_rank(self._step))
                     and not game_board.has_piece(dst)):
-                return True
+                return self._validate_promotion(dst, pawn_promotion_piece)
 
-        return self.threatens(src, dst, game_board)
+        return self.threatens(src, dst, game_board) \
+               and self._validate_promotion(dst, pawn_promotion_piece)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         # A pawn can capture a piece diagonally
@@ -91,3 +102,13 @@ class Pawn(Piece):
                         pawn_promotion=promo_piece,
                         captured=game_board.get_piece(dest)))
         return moves
+
+    def _validate_promotion(self, dst: Square, pawn_promotion_piece: Piece):
+        if dst.rank != self._end_rank and pawn_promotion_piece:
+            return False
+        if dst.rank == self._end_rank and not pawn_promotion_piece:
+            return False
+        if dst.rank == self._end_rank \
+                and not pawn_promotion_piece.name() in _ELIGIBLE_PROMOTION_PIECES:
+            return False
+        return True
