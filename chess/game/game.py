@@ -65,15 +65,34 @@ class Game:
         return True
 
     def _apply_move(self, move: Move):
+        piece = move.piece
+        piece.increment_moves()
         dest_piece = move.pawn_promotion_piece if move.pawn_promotion_piece else move.piece
         self._board.remove_piece(move.source)
         self._board.set_piece(move.dest, dest_piece)
+
+        if piece.name() == Piece.KING and piece.is_castle_move(move.source, move.dest):
+            rook_square = piece.get_castle_rook_square(move.dest)
+            rook = self.board().get_piece(rook_square)
+            target_rook_square = piece.get_target_castle_rook_square(move.dest)
+            self._board.remove_piece(rook_square)
+            self._board.set_piece(target_rook_square, rook)
+
         self._moves.append(move)
 
     def _undo_move(self):
         move = self._moves.pop()
+        piece = move.piece
+        piece.increment_moves()
         self._board.set_piece(move.source, move.piece)
         self._board.set_piece(move.dest, move.captured)
+
+        if piece.name == Piece.KING and piece.is_castle_move(move.source, move.dest):
+            rook_square = piece.get_rook_square(move.dest)
+            target_rook_square = piece.get_target_castle_rook_square(move.dest)
+            rook = self.board().get_piece(target_rook_square)
+            self._board.remove_piece(target_rook_square)
+            self._board.set_piece(rook_square, rook)
 
     def _is_king_in_check(self, color: Color) -> bool:
         king_square = self._board.get_king_square(color)

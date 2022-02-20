@@ -18,12 +18,22 @@ class Piece:
     def __init__(self, name, color):
         self._name = name
         self._color = color
+        self._num_moves = 0
 
     def name(self):
         return self._name
 
     def color(self):
         return self._color
+
+    def num_moves(self):
+        return self._num_moves
+
+    def increment_moves(self):
+        self._num_moves = self._num_moves + 1
+
+    def decrement_moves(self):
+        self._num_moves = self._num_moves - 1
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece=None) -> bool:
         """

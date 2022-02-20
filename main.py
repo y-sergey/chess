@@ -58,7 +58,7 @@ def run_game():
     display.show()
 
     # Some test moves
-    initial_moves = [
+    test_moves = [
         'e2e4', 'd7d5',
         'f1c4', 'a7a6',
         'a2a4', 'd5e4',
@@ -82,8 +82,14 @@ def run_game():
         'd2d4', 'g7g5'
     ]
 
-    initial_moves = scholar_mate_moves
-    for move in []:
+    test_castle_moves = [
+        'e2e4', 'd7d5',
+        'f1c4', 'c8e6',
+        'g1f3', 'b8c6'
+    ]
+
+    initial_moves = test_castle_moves
+    for move in initial_moves:
         print(f'\n\nMoving {move}')
         if not run_move(game, move):
             raise Exception(f'Illegal move {move}')
