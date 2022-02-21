@@ -100,7 +100,7 @@ class Pawn(Piece):
                         piece=self,
                         source=src,
                         dest=dest,
-                        pawn_promotion=promo_piece,
+                        pawn_promotion_piece=promo_piece,
                         captured=game_board.get_piece(dest)))
         return moves
 
