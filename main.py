@@ -1,9 +1,12 @@
+from chess.bot.random_move_bot import RandomMoveBot
 from chess.console.display import Display
 from chess.game.bishop import Bishop
 from chess.game.board import File
 from chess.game.board import Rank
+from chess.game.color import Color
 from chess.game.game import Game
 from chess.game.knight import Knight
+from chess.game.move import Move
 from chess.game.piece import Piece
 from chess.game.queen import Queen
 from chess.game.rook import Rook
@@ -25,9 +28,9 @@ def get_rank(pos):
     return ord(pos.lower()) - ord('1')
 
 
-def run_move(game: Game, move_text: str):
+def get_move(game: Game, move_text: str) -> Move:
     if not 4 <= len(move_text) <= 5:
-        return False
+        return None
     src_file = get_file(move_text[0])
     src_rank = get_rank(move_text[1])
     dst_file = get_file(move_text[2])
@@ -35,10 +38,10 @@ def run_move(game: Game, move_text: str):
 
     for rank in [src_rank, dst_rank]:
         if not Rank.is_valid(rank):
-            return False
+            return None
     for file in [src_file, dst_file]:
         if not File.is_valid(file):
-            return False
+            return None
 
     src = Square(file=src_file, rank=src_rank)
     dst = Square(file=dst_file, rank=dst_rank)
@@ -47,9 +50,9 @@ def run_move(game: Game, move_text: str):
         piece_name = move_text[4].upper()
         constructor = PIECE_CONSTRUCTORS.get(piece_name, None)
         if not constructor:
-            return False
+            return None
         promo_piece = constructor(game.current_player())
-    return game.move(src, dst, pawn_promotion=promo_piece)
+    return src, dst, promo_piece
 
 
 def run_game():
@@ -91,25 +94,41 @@ def run_game():
     initial_moves = []
     for move in initial_moves:
         print(f'\n\nMoving {move}')
-        if not run_move(game, move):
+        src, dst, promo_piece = get_move(game, move) or (None, None, None)
+        result = False
+        if src:
+            result = game.move(src, dst, promo_piece)
+        if not result:
             raise Exception(f'Illegal move {move}')
         if game.is_check():
             raise Exception('Unexpected check')
         display.show()
         print(f'Last move - {move}')
 
+    bot = RandomMoveBot(Color.BLACK, game)
     while True:
-        player = game.current_player().name
+        player = game.current_player()
         if game.result():
             print(f'{game.result().name}! Game over.')
             break
         if game.is_check():
             print('CHECK ->')
-        prompt = f'{player} to play. Make a move or type "exit" to exit: '
-        text = input(prompt).strip().lower()
-        if text == 'exit':
-            break
-        result = run_move(game, text)
+        print(f'{player.name} to play')
+
+        # Bot move
+        if player == bot.color():
+            bot_move = bot.move()
+            result = game.move(bot_move.source, bot_move.dest, bot_move.pawn_promotion_piece)
+        # Human move
+        else:
+            prompt = 'Make a move or type "exit" to exit: '
+            text = input(prompt).strip().lower()
+            if text == 'exit':
+                break
+            src, dst, promo_piece = get_move(game, text) or (None, None, None)
+            result = False
+            if src:
+                result = game.move(src, dst, promo_piece)
         display.show()
         if not result:
             print(f'Move \'{text}\' is illegal')
