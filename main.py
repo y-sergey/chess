@@ -88,7 +88,7 @@ def run_game():
         'g1f3', 'b8c6'
     ]
 
-    initial_moves = test_castle_moves
+    initial_moves = []
     for move in initial_moves:
         print(f'\n\nMoving {move}')
         if not run_move(game, move):

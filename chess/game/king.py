@@ -72,7 +72,7 @@ class King(Piece):
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
         rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
         moves = super()._get_available_moves_by_steps(src, game_board, rank_and_file_steps)
-        short_castle_square = Square(rank=self._start_rank.value, file=File.FILE_G.value)
+        short_castle_square = Square(rank=self._start_rank, file=File.FILE_G.value)
         long_castle_square = Square(rank=self._start_rank, file=File.FILE_C.value)
         for dest in [short_castle_square, long_castle_square]:
             if self.__can_castle(src, dest, game_board):

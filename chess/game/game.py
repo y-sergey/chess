@@ -1,5 +1,6 @@
 from enum import Enum
 from enum import unique
+from typing import List
 
 from chess.game.board import Board
 from chess.game.color import Color
@@ -101,15 +102,19 @@ class Game:
                 return True
         return False
 
-    def _has_valid_moves(self, color: Color):
+    def _has_valid_moves(self, color: Color) -> bool:
+        return len(self.get_available_moves(color)) > 0
+
+    def get_available_moves(self, color: Color) -> List[Move]:
+        moves = []
         for piece, square in self._board.get_pieces_by_color(color):
             for move in piece.get_available_moves(square, self._board):
                 self._apply_move(move)
                 is_check = self._is_king_in_check(color)
                 self._undo_move()
                 if not is_check:
-                    return True
-        return False
+                    moves.append(move)
+        return moves
 
     def is_check(self):
         return self._is_check
