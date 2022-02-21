@@ -1,3 +1,5 @@
+from typing import List
+
 import chess.game.constants as constants
 from chess.game.bishop import Bishop
 from chess.game.color import Color
@@ -70,7 +72,7 @@ class Board:
             square = Square(file=square.file + file_step, rank=square.rank + rank_step)
         return False
 
-    def get_pieces_by_color(self, color: Color):
+    def get_pieces_by_color(self, color: Color) -> List[Piece]:
         result = []
         for rank in range(Rank.RANK_1.value, constants.NUM_RANKS):
             for file in range(File.FILE_A.value, constants.NUM_FILES):

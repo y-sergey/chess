@@ -39,7 +39,7 @@ class Display:
     def __init__(self, board: Board):
         self._board = board
 
-    def show(self):
+    def show(self) -> None:
         print()
         Display._print_col_indices()
         for row in range(constants.NUM_RANKS - 1, -1, -1):
@@ -54,11 +54,11 @@ class Display:
         print()
 
     @staticmethod
-    def _get_square(row, col):
+    def _get_square(row, col) -> str:
         return ' ' if (row + col) % 2 == 0 else chr(0x00B7)
 
     @staticmethod
-    def _print_col_indices():
+    def _print_col_indices() -> None:
         print('  ', end='')
         for col in range(constants.NUM_FILES):
             print(chr(ord('A') + col), end=' ')

@@ -17,7 +17,7 @@ class Rank(Enum):
     RANK_8 = 7
 
     @staticmethod
-    def is_valid(rank: int):
+    def is_valid(rank: int) -> bool:
         return Rank.RANK_1.value <= rank <= Rank.RANK_8.value
 
 
@@ -33,5 +33,5 @@ class File(Enum):
     FILE_H = 7
 
     @staticmethod
-    def is_valid(file: int):
+    def is_valid(file: int) -> bool:
         return File.FILE_A.value <= file <= File.FILE_H.value

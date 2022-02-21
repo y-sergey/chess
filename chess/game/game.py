@@ -65,7 +65,7 @@ class Game:
 
         return True
 
-    def _apply_move(self, move: Move):
+    def _apply_move(self, move: Move) -> None:
         piece = move.piece
         piece.increment_moves()
         dest_piece = move.pawn_promotion_piece if move.pawn_promotion_piece else move.piece
@@ -81,7 +81,7 @@ class Game:
 
         self._moves.append(move)
 
-    def _undo_move(self):
+    def _undo_move(self) -> None:
         move = self._moves.pop()
         piece = move.piece
         piece.decrement_moves()
@@ -116,7 +116,7 @@ class Game:
                     moves.append(move)
         return moves
 
-    def is_check(self):
+    def is_check(self) -> bool:
         return self._is_check
 
     def result(self) -> Result:

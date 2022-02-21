@@ -31,7 +31,7 @@ class Pawn(Piece):
             self._end_rank = Rank.RANK_1.value
             self._step = -1
 
-    def end_rank(self):
+    def end_rank(self) -> int:
         return self._end_rank
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
@@ -104,7 +104,7 @@ class Pawn(Piece):
                         captured=game_board.get_piece(dest)))
         return moves
 
-    def _validate_promotion(self, dst: Square, pawn_promotion_piece: Piece):
+    def _validate_promotion(self, dst: Square, pawn_promotion_piece: Piece) -> bool:
         if dst.rank != self._end_rank and pawn_promotion_piece:
             return False
         if dst.rank == self._end_rank and not pawn_promotion_piece:

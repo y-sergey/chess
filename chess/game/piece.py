@@ -1,6 +1,7 @@
 from typing import List
 from typing import Tuple
 
+from chess.game.color import Color
 from chess.game.constants import File
 from chess.game.constants import Rank
 from chess.game.move import Move
@@ -15,24 +16,24 @@ class Piece:
     QUEEN = 'Q'
     KING = 'K'
 
-    def __init__(self, name, color):
+    def __init__(self, name: str, color: Color):
         self._name = name
         self._color = color
         self._num_moves = 0
 
-    def name(self):
+    def name(self) -> str:
         return self._name
 
-    def color(self):
+    def color(self) -> Color:
         return self._color
 
-    def num_moves(self):
+    def num_moves(self) -> int:
         return self._num_moves
 
-    def increment_moves(self):
+    def increment_moves(self) -> None:
         self._num_moves = self._num_moves + 1
 
-    def decrement_moves(self):
+    def decrement_moves(self) -> None:
         self._num_moves = self._num_moves - 1
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece=None) -> bool:
@@ -50,7 +51,7 @@ class Piece:
         """
         return False
 
-    def get_available_moves(self, src: Square, game_board):
+    def get_available_moves(self, src: Square, game_board) -> List[Move]:
         """
         Returns all available moves for this piece given its position and the board.
         This method doesn't take it into account that the king currently can be in check
@@ -61,7 +62,7 @@ class Piece:
     def _search_available_moves_by_steps(self,
                                          src: Square,
                                          game_board,
-                                         rank_and_file_steps: List[Tuple[int, int]]):
+                                         rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_file(file_step).add_rank(rank_step)
@@ -78,7 +79,7 @@ class Piece:
     def _get_available_moves_by_steps(self,
                                       src: Square,
                                       game_board,
-                                      rank_and_file_steps: List[Tuple[int, int]]):
+                                      rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_file(file_step).add_rank(rank_step)
@@ -89,5 +90,5 @@ class Piece:
                     moves.append(move)
         return moves
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self._name} - {self._color.name.lower()}'

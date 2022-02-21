@@ -91,7 +91,7 @@ def run_game():
         'g1f3', 'b8c6'
     ]
 
-    initial_moves = []
+    initial_moves = test_moves
     for move in initial_moves:
         print(f'\n\nMoving {move}')
         src, dst, promo_piece = get_move(game, move) or (None, None, None)

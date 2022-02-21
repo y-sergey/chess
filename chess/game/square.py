@@ -15,6 +15,6 @@ class Square:
     def add_steps(self, file_steps, rank_steps):
         return Square(file=self.file + file_steps, rank=self.rank + rank_steps)
 
-    def __str__(self):
+    def __str__(self) -> str:
         file_str = chr(ord('A') + self.file)
         return f'{file_str}{self.rank + 1}'
