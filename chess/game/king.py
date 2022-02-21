@@ -34,6 +34,9 @@ class King(Piece):
         rook_square = Square(rank=dst.rank, file=rook_file.value)
         rook = game_board.get_piece(rook_square)
 
+        # The king must be on the start square
+        if src.file != King._START_FILE or src.rank != self._start_rank:
+            return False
         # Check if there is a rook
         if not rook or rook.name() != Piece.ROOK or rook.color() != self.color():
             return False
