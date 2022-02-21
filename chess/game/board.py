@@ -47,18 +47,18 @@ class Board:
     def get_piece(self, square: Square) -> Piece:
         return self._pieces[square.rank][square.file]
 
-    def set_piece(self, square: Square, piece: Piece):
+    def set_piece(self, square: Square, piece: Piece) -> None:
         self._pieces[square.rank][square.file] = piece
         if piece and piece.name() == Piece.KING:
             self._king_pos[piece.color()] = square
 
-    def remove_piece(self, square: Square):
+    def remove_piece(self, square: Square) -> None:
         self.set_piece(square, None)
 
-    def has_piece(self, square: Square):
+    def has_piece(self, square: Square) -> bool:
         return self.get_piece(square) is not None
 
-    def has_pieces_between(self, src: Square, dst: Square):
+    def has_pieces_between(self, src: Square, dst: Square) -> bool:
         rank_diff = dst.rank - src.rank
         file_diff = dst.file - src.file
 
@@ -82,5 +82,5 @@ class Board:
                     result.append((piece, square))
         return result
 
-    def get_king_square(self, color: Color):
+    def get_king_square(self, color: Color) -> Square:
         return self._king_pos[color]
