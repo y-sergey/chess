@@ -84,12 +84,12 @@ class Game:
     def _undo_move(self):
         move = self._moves.pop()
         piece = move.piece
-        piece.increment_moves()
+        piece.decrement_moves()
         self._board.set_piece(move.source, move.piece)
         self._board.set_piece(move.dest, move.captured)
 
-        if piece.name == Piece.KING and piece.is_castle_move(move.source, move.dest):
-            rook_square = piece.get_rook_square(move.dest)
+        if piece.name() == Piece.KING and piece.is_castle_move(move.source, move.dest):
+            rook_square = piece.get_castle_rook_square(move.dest)
             target_rook_square = piece.get_target_castle_rook_square(move.dest)
             rook = self.board().get_piece(target_rook_square)
             self._board.remove_piece(target_rook_square)
