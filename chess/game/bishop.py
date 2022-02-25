@@ -7,7 +7,7 @@ from chess.game.square import Square
 
 class Bishop(Piece):
     def __init__(self, color):
-        Piece.__init__(self, Piece.BISHOP, color)
+        Piece.__init__(self, Piece.BISHOP, color, material_value=3)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank

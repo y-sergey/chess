@@ -54,16 +54,20 @@ class Game:
         if self._is_king_in_check(self._turn):
             self._undo_move()
             return False
+        self._update_game_state()
+        return True
 
+    def undo_move(self) -> None:
+        self._undo_move()
+        self._update_game_state()
+
+    def _update_game_state(self) -> None:
         next_player = self._turn.opposite()
         self._is_check = self._is_king_in_check(next_player)
         opponent_has_valid_moves = self._has_valid_moves(next_player)
         if not opponent_has_valid_moves:
             self._result = Result.CHECKMATE if self._is_check else Result.STALEMATE
-
         self._turn = next_player
-
-        return True
 
     def _apply_move(self, move: Move) -> None:
         piece = move.piece

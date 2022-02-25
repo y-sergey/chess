@@ -1,3 +1,4 @@
+import functools
 from typing import List
 
 import chess.game.constants as constants
@@ -84,3 +85,7 @@ class Board:
 
     def get_king_square(self, color: Color) -> Square:
         return self._king_pos[color]
+
+    def get_material_count(self, color: Color) -> int:
+        values = [piece.material_value() for piece, piece in self.get_pieces_by_color(color)]
+        return functools.reduce(lambda a, b: a + b, values, 0)

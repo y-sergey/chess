@@ -91,7 +91,7 @@ def run_game():
         'g1f3', 'b8c6'
     ]
 
-    initial_moves = test_moves
+    initial_moves = []
     for move in initial_moves:
         print(f'\n\nMoving {move}')
         src, dst, promo_piece = get_move(game, move) or (None, None, None)
@@ -113,7 +113,10 @@ def run_game():
             break
         if game.is_check():
             print('CHECK ->')
-        print(f'{player.name} to play')
+        player_material = game.board().get_material_count(player)
+        opponent_material = game.board().get_material_count(player.opposite())
+        advantage = player_material - opponent_material
+        print(f'{player.name} to play. Advantage: {advantage}')
 
         # Bot move
         if player == bot.color():

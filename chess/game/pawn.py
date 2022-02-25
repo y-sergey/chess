@@ -21,7 +21,7 @@ _ELIGIBLE_PROMOTION_PIECES = {
 
 class Pawn(Piece):
     def __init__(self, color: Color):
-        Piece.__init__(self, Piece.PAWN, color)
+        Piece.__init__(self, Piece.PAWN, color, material_value=1)
         if color == Color.WHITE:
             self._start_rank = Rank.RANK_2.value
             self._end_rank = Rank.RANK_8.value

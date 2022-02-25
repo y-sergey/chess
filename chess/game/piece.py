@@ -16,10 +16,11 @@ class Piece:
     QUEEN = 'Q'
     KING = 'K'
 
-    def __init__(self, name: str, color: Color):
+    def __init__(self, name: str, color: Color, material_value: int):
         self._name = name
         self._color = color
         self._num_moves = 0
+        self._material_value = material_value
 
     def name(self) -> str:
         return self._name
@@ -35,6 +36,9 @@ class Piece:
 
     def decrement_moves(self) -> None:
         self._num_moves = self._num_moves - 1
+
+    def material_value(self):
+        return self._material_value
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece=None) -> bool:
         """

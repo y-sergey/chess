@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 from chess.game.color import Color
@@ -12,7 +13,7 @@ class King(Piece):
     _START_FILE = File.FILE_E.value
 
     def __init__(self, color):
-        Piece.__init__(self, Piece.KING, color)
+        Piece.__init__(self, Piece.KING, color, material_value=sys.maxsize)
         self._start_rank = Rank.RANK_1.value if color == Color.WHITE else Rank.RANK_8.value
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
