@@ -1,4 +1,4 @@
-from chess.bot.random_move_bot import RandomMoveBot
+from chess.bot.minimax_bot import MiniMaxBot
 from chess.console.display import Display
 from chess.game.bishop import Bishop
 from chess.game.board import File
@@ -105,7 +105,7 @@ def run_game():
         display.show()
         print(f'Last move - {move}')
 
-    bot = RandomMoveBot(Color.BLACK, game)
+    bot = MiniMaxBot(Color.BLACK, game)
     while True:
         player = game.current_player()
         if game.result():

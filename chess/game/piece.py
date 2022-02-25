@@ -72,12 +72,12 @@ class Piece:
             dest = src.add_file(file_step).add_rank(rank_step)
             while File.is_valid(dest.file) and Rank.is_valid(dest.rank):
                 target = game_board.get_piece(dest)
-                if target and target.color() == self.color():
-                    break
-                else:
+                if not target or target.color() != self.color():
                     move = Move(source=src, dest=dest, piece=self, captured=target)
                     moves.append(move)
                     dest = dest.add_file(file_step).add_rank(rank_step)
+                if target is not None:
+                    break
         return moves
 
     def _get_available_moves_by_steps(self,

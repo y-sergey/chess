@@ -87,5 +87,10 @@ class Board:
         return self._king_pos[color]
 
     def get_material_count(self, color: Color) -> int:
-        values = [piece.material_value() for piece, piece in self.get_pieces_by_color(color)]
+        values = [piece.material_value() for piece, square in self.get_pieces_by_color(color)]
         return functools.reduce(lambda a, b: a + b, values, 0)
+
+    def get_material_advantage(self, color: Color) -> int:
+        player_material = self.get_material_count(color)
+        opponent_material = self.get_material_count(color.opposite())
+        return player_material - opponent_material

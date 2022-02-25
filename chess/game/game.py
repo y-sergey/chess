@@ -109,6 +109,9 @@ class Game:
     def _has_valid_moves(self, color: Color) -> bool:
         return len(self.get_available_moves(color)) > 0
 
+    def get_current_moves(self):
+        return list(self._moves)
+
     def get_available_moves(self, color: Color) -> List[Move]:
         moves = []
         for piece, square in self._board.get_pieces_by_color(color):
