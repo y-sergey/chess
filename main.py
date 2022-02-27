@@ -113,10 +113,8 @@ def run_game():
             break
         if game.is_check():
             print('CHECK ->')
-        player_material = game.board().get_material_count(player)
-        opponent_material = game.board().get_material_count(player.opposite())
-        advantage = player_material - opponent_material
-        print(f'{player.name} to play. Advantage: {advantage}')
+        advantage = game.board().get_material_advantage(Color.WHITE)
+        print(f'{player.name} to play. Material advantage: {advantage}')
 
         # Bot move
         if player == bot.color():
