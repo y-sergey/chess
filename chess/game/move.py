@@ -13,7 +13,7 @@ class Move:
     pawn_promotion_piece: 'Piece' = field(default=None)
 
     def __str__(self):
-        return f'{self.piece.name()}-{self.source}-{self.dest}'
+        return f'{self.piece.name()}{self.source}-{self.dest}'
 
     def __repr__(self):
         return self.__str__()
