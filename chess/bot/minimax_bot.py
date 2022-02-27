@@ -1,3 +1,5 @@
+from typing import List
+
 import math
 import time
 
@@ -26,8 +28,8 @@ class MiniMaxBot:
 
         max_advantage = -math.inf
         best_move = None
-        depth = 3
-        for move in self._game.get_available_moves(self._color):
+        depth = 2
+        for move in self._get_moves_to_evaluate(self.color()):
             move_success = self._move(move)
             assert move_success
             advantage = self._run_minimax(self._color, depth)
@@ -58,7 +60,7 @@ class MiniMaxBot:
 
         if self._game.current_player() == color:
             max_advantage = -math.inf
-            for move in self._game.get_available_moves(color):
+            for move in self._get_moves_to_evaluate(color):
                 move_success = self._move(move)
                 assert move_success
                 advantage = self._run_minimax(color, depth - 1)
@@ -68,8 +70,7 @@ class MiniMaxBot:
             return max_advantage
         else:
             min_advantage = math.inf
-            moves = self._game.get_available_moves(color.opposite())
-            for move in moves:
+            for move in self._get_moves_to_evaluate(color.opposite()):
                 move_success = self._move(move)
                 assert move_success
                 advantage = self._run_minimax(color, depth - 1)
@@ -81,3 +82,9 @@ class MiniMaxBot:
     def _move(self, move: Move) -> bool:
         self._processed_moves = self._processed_moves + 1
         return self._game.move(move.source, move.dest, move.pawn_promotion_piece)
+
+    def _get_moves_to_evaluate(self, color: Color) -> List[Move]:
+        moves = list(self._game.get_available_moves(color))
+        # Consider moves that capture a piece first
+        moves.sort(key=lambda move: move.captured is None)
+        return moves
