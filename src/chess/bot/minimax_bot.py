@@ -43,6 +43,8 @@ class MiniMaxBot:
         moves_per_sec = self._processed_moves / elapsed_ns * 10 ** 9
         combinations_per_sec = self._processed_combinations / elapsed_ns * 10 ** 9
         print(f'Elapsed seconds - {elapsed_ns / 10 ** 9}')
+        print(f'Moves processed - {self._processed_moves}')
+        print(f'Combinations processed - {self._processed_combinations}')
         print(f'Moves per seconds - {moves_per_sec}')
         print(f'Combinations per seconds - {combinations_per_sec}')
         return best_move
