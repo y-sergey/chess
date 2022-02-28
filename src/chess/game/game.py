@@ -69,6 +69,8 @@ class Game:
         opponent_has_valid_moves = self._has_valid_moves(next_player)
         if not opponent_has_valid_moves:
             self._result = Result.CHECKMATE if self._is_check else Result.STALEMATE
+        else:
+            self._result = None
         self._turn = next_player
 
     def _apply_move(self, move: Move) -> None:
