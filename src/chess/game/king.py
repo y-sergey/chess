@@ -50,7 +50,7 @@ class King(Piece):
         # Check that the king and the squares between the king and the rook
         # aren't threatened (the king can't be in check and can't go through check).
         file_step = (dst.file - src.file) // abs(dst.file - src.file)
-        for piece, piece_square in game_board.get_pieces_by_color(self.color().opposite()):
+        for piece_square, piece in game_board.get_pieces_by_color(self.color().opposite()):
             # The king moves by 2 squares while castling
             for file in range(src.file, src.file + 3 * file_step, file_step):
                 square = Square(rank=src.rank, file=file)

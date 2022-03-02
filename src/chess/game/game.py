@@ -105,7 +105,7 @@ class Game:
 
     def _is_king_in_check(self, color: Color) -> bool:
         king_square = self._board.get_king_square(color)
-        for piece, square in self._board.get_pieces_by_color(color.opposite()):
+        for square, piece in self._board.get_pieces_by_color(color.opposite()):
             if piece.threatens(square, king_square, self._board):
                 return True
         return False
@@ -117,7 +117,7 @@ class Game:
         return list(self._moves)
 
     def get_available_moves(self, color: Color) -> List[Move]:
-        for piece, square in self._board.get_pieces_by_color(color):
+        for square, piece in self._board.get_pieces_by_color(color):
             for move in piece.get_available_moves(square, self._board):
                 self._apply_move(move)
                 is_check = self._is_king_in_check(color)

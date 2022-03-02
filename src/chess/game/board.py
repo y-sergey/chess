@@ -19,37 +19,43 @@ class Board:
 
     def __init__(self):
         # Outer lists represent ranks (rows). Inner lists represent files (columns).
-        self._pieces = [[None for _ in range(8)] for _ in range(8)]
-        # Pawns
-        for col in range(8):
-            self._pieces[1][col] = Pawn(Color.WHITE)
-            self._pieces[6][col] = Pawn(Color.BLACK)
-
-        for row, color in ((0, Color.WHITE), (7, Color.BLACK)):
-            # Rooks
-            for col in (0, 7):
-                self._pieces[row][col] = Rook(color)
-            # Knights
-            for col in (1, 6):
-                self._pieces[row][col] = Knight(color)
-            # Bishops
-            for col in (2, 5):
-                self._pieces[row][col] = Bishop(color)
-            # Queen
-            self._pieces[row][3] = Queen(color)
-            # King
-            self._pieces[row][4] = King(color)
-
-        self._king_pos = {
-            Color.WHITE: Square(file=File.FILE_E.value, rank=Rank.RANK_1.value),
-            Color.BLACK: Square(file=File.FILE_E.value, rank=Rank.RANK_8.value)
+        self._pieces = [
+            [None for _ in range(constants.NUM_FILES)] for _ in range(constants.NUM_RANKS)
+        ]
+        self._king_pos = {}
+        self._pieces_by_square = {
+            Color.WHITE: {},
+            Color.BLACK: {}
         }
+        # Pawns
+        for file in File:
+            self.set_piece(Square(rank=Rank.RANK_2.value, file=file.value), Pawn(Color.WHITE))
+            self.set_piece(Square(rank=Rank.RANK_7.value, file=file.value), Pawn(Color.BLACK))
+
+        for rank, color in ((Rank.RANK_1, Color.WHITE), (Rank.RANK_8, Color.BLACK)):
+            # Rooks
+            for file in [File.FILE_A, File.FILE_H]:
+                self.set_piece(Square(rank=rank.value, file=file.value), Rook(color))
+            # Knights
+            for file in [File.FILE_B, File.FILE_G]:
+                self.set_piece(Square(rank=rank.value, file=file.value), Knight(color))
+            # Bishops
+            for file in [File.FILE_C, File.FILE_F]:
+                self.set_piece(Square(rank=rank.value, file=file.value), Bishop(color))
+            # Queen
+            self.set_piece(Square(rank=rank.value, file=File.FILE_D.value), Queen(color))
+            # King
+            self.set_piece(Square(rank=rank.value, file=File.FILE_E.value), King(color))
 
     def get_piece(self, square: Square) -> Piece:
         return self._pieces[square.rank][square.file]
 
     def set_piece(self, square: Square, piece: Piece) -> None:
         self._pieces[square.rank][square.file] = piece
+        self._pieces_by_square[Color.WHITE].pop(square, None)
+        self._pieces_by_square[Color.BLACK].pop(square, None)
+        if piece:
+            self._pieces_by_square[piece.color()][square] = piece
         if piece and piece.name() == Piece.KING:
             self._king_pos[piece.color()] = square
 
@@ -74,20 +80,13 @@ class Board:
         return False
 
     def get_pieces_by_color(self, color: Color) -> List[Piece]:
-        result = []
-        for rank in range(Rank.RANK_1.value, constants.NUM_RANKS):
-            for file in range(File.FILE_A.value, constants.NUM_FILES):
-                square = Square(file=file, rank=rank)
-                piece = self.get_piece(square)
-                if piece and piece.color() == color:
-                    result.append((piece, square))
-        return result
+        return list(self._pieces_by_square[color].items())
 
     def get_king_square(self, color: Color) -> Square:
         return self._king_pos[color]
 
     def get_material_count(self, color: Color) -> int:
-        values = [piece.material_value() for piece, square in self.get_pieces_by_color(color)]
+        values = [piece.material_value() for square, piece in self.get_pieces_by_color(color)]
         return functools.reduce(lambda a, b: a + b, values, 0)
 
     def get_material_advantage(self, color: Color) -> int:
