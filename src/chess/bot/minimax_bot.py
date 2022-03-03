@@ -8,6 +8,8 @@ from chess.game.game import Game
 from chess.game.game import Result
 from chess.game.move import Move
 
+_CHECKMATE_ADVANTAGE = 500
+
 
 class MiniMaxBot:
 
@@ -53,7 +55,9 @@ class MiniMaxBot:
         if self._game.result() == Result.STALEMATE:
             return 0
         if self._game.result() == Result.CHECKMATE:
-            return -math.inf if self._game.current_player() == color else math.inf
+            return (
+                -_CHECKMATE_ADVANTAGE if self._game.current_player() == color
+                else _CHECKMATE_ADVANTAGE)
         if depth == 0:
             # print(self._game.get_current_moves())
             self._processed_combinations = self._processed_combinations + 1
