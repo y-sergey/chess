@@ -87,7 +87,8 @@ class MiniMaxBot:
 
     def _move(self, move: Move) -> bool:
         self._processed_moves = self._processed_moves + 1
-        return self._game.move(move.source, move.dest, move.pawn_promotion_piece)
+        self._game.move(move)
+        return True
 
     def _get_moves_to_evaluate(self, color: Color) -> List[Move]:
         moves = list(self._game.get_available_moves(color))

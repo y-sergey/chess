@@ -10,11 +10,11 @@ from chess.game.square import Square
 
 
 class King(Piece):
-    _START_FILE = File.FILE_E.value
+    _START_FILE = File.FILE_E
 
     def __init__(self, color):
         Piece.__init__(self, Piece.KING, color, material_value=sys.maxsize)
-        self._start_rank = Rank.RANK_1.value if color == Color.WHITE else Rank.RANK_8.value
+        self._start_rank = Rank.RANK_1 if color == Color.WHITE else Rank.RANK_8
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
         return (self.__can_castle(src, dst, game_board) if self.is_castle_move(src, dst)
@@ -25,14 +25,14 @@ class King(Piece):
                 and dst.rank == src.rank and abs(dst.file - src.file) == 2)
 
     def get_castle_rook_square(self, dest: Square) -> Square:
-        return Square(rank=self._start_rank, file=King.__get_castle_rook_file(dest).value)
+        return Square(rank=self._start_rank, file=King.__get_castle_rook_file(dest))
 
     def get_target_castle_rook_square(self, dest: Square) -> Square:
-        return Square(rank=self._start_rank, file=King.__get_target_castle_rook_file(dest).value)
+        return Square(rank=self._start_rank, file=King.__get_target_castle_rook_file(dest))
 
     def __can_castle(self, src: Square, dst: Square, game_board) -> bool:
         rook_file = King.__get_castle_rook_file(dst)
-        rook_square = Square(rank=dst.rank, file=rook_file.value)
+        rook_square = Square(rank=dst.rank, file=rook_file)
         rook = game_board.get_piece(rook_square)
 
         # The king must be on the start square
@@ -76,8 +76,8 @@ class King(Piece):
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
         rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
         moves = super()._get_available_moves_by_steps(src, game_board, rank_and_file_steps)
-        short_castle_square = Square(rank=self._start_rank, file=File.FILE_G.value)
-        long_castle_square = Square(rank=self._start_rank, file=File.FILE_C.value)
+        short_castle_square = Square(rank=self._start_rank, file=File.FILE_G)
+        long_castle_square = Square(rank=self._start_rank, file=File.FILE_C)
         for dest in [short_castle_square, long_castle_square]:
             if self.__can_castle(src, dest, game_board):
                 moves.append(Move(source=src, dest=dest, piece=self))

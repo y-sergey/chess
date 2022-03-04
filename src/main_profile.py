@@ -12,9 +12,9 @@ _bot = MiniMaxBot(Color.BLACK, _game)
 
 
 def main():
-    _game.move(
-        Square(file=File.FILE_E.value, rank=Rank.RANK_2.value),
-        Square(file=File.FILE_E.value, rank=Rank.RANK_4.value))
+    _game.validate_and_move(
+        Square(file=File.FILE_E, rank=Rank.RANK_2),
+        Square(file=File.FILE_E, rank=Rank.RANK_4))
     profile.run('_bot.move()', sort='tottime')
 
 

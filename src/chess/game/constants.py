@@ -1,12 +1,8 @@
-from enum import Enum
-from enum import unique
-
 NUM_RANKS = 8
 NUM_FILES = 8
 
 
-@unique
-class Rank(Enum):
+class Rank:
     RANK_1 = 0
     RANK_2 = 1
     RANK_3 = 2
@@ -18,11 +14,10 @@ class Rank(Enum):
 
     @staticmethod
     def is_valid(rank: int) -> bool:
-        return Rank.RANK_1.value <= rank <= Rank.RANK_8.value
+        return Rank.RANK_1 <= rank <= Rank.RANK_8
 
 
-@unique
-class File(Enum):
+class File:
     FILE_A = 0
     FILE_B = 1
     FILE_C = 2
@@ -34,4 +29,4 @@ class File(Enum):
 
     @staticmethod
     def is_valid(file: int) -> bool:
-        return File.FILE_A.value <= file <= File.FILE_H.value
+        return File.FILE_A <= file <= File.FILE_H

@@ -97,7 +97,7 @@ def run_game():
         src, dst, promo_piece = get_move(game, move) or (None, None, None)
         result = False
         if src:
-            result = game.move(src, dst, promo_piece)
+            result = game.validate_and_move(src, dst, promo_piece)
         if not result:
             raise Exception(f'Illegal move {move}')
         if game.is_check():
@@ -119,7 +119,7 @@ def run_game():
         # Bot move
         if player == bot.color():
             bot_move = bot.move()
-            result = game.move(bot_move.source, bot_move.dest, bot_move.pawn_promotion_piece)
+            result = game.validate_and_move(bot_move.source, bot_move.dest, bot_move.pawn_promotion_piece)
         # Human move
         else:
             prompt = 'Make a move or type "exit" to exit: '
@@ -129,7 +129,7 @@ def run_game():
             src, dst, promo_piece = get_move(game, text) or (None, None, None)
             result = False
             if src:
-                result = game.move(src, dst, promo_piece)
+                result = game.validate_and_move(src, dst, promo_piece)
         display.show()
         if not result:
             print(f'Move \'{text}\' is illegal')

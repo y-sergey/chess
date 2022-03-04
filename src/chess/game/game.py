@@ -31,7 +31,7 @@ class Game:
     def current_player(self) -> Color:
         return self._turn
 
-    def move(self, src: Square, dst: Square, pawn_promotion: Piece = None) -> bool:
+    def validate_and_move(self, src: Square, dst: Square, pawn_promotion: Piece = None) -> bool:
         piece = self._board.get_piece(src)
         target_piece = self._board.get_piece(dst)
 
@@ -58,6 +58,10 @@ class Game:
             return False
         self._update_game_state()
         return True
+
+    def move(self, move: Move) -> None:
+        self._apply_move(move)
+        self._update_game_state()
 
     def undo_move(self) -> None:
         self._undo_move()
