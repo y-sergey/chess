@@ -22,11 +22,8 @@ class Board:
         self._pieces = [
             [None for _ in range(constants.NUM_FILES)] for _ in range(constants.NUM_RANKS)
         ]
-        self._king_pos = {}
-        self._pieces_by_square = {
-            Color.WHITE: {},
-            Color.BLACK: {}
-        }
+        self._king_pos = [None, None]
+        self._pieces_by_square = [{}, {}]
         # Pawns
         for file in range(File.FILE_A, File.FILE_H + 1):
             self.set_piece(Square(rank=Rank.RANK_2, file=file), Pawn(Color.WHITE))
@@ -52,12 +49,12 @@ class Board:
 
     def set_piece(self, square: Square, piece: Piece) -> None:
         self._pieces[square.rank][square.file] = piece
-        self._pieces_by_square[Color.WHITE].pop(square, None)
-        self._pieces_by_square[Color.BLACK].pop(square, None)
+        self._pieces_by_square[Color.WHITE.value].pop(square, None)
+        self._pieces_by_square[Color.BLACK.value].pop(square, None)
         if piece:
-            self._pieces_by_square[piece.color()][square] = piece
+            self._pieces_by_square[piece.color().value][square] = piece
         if piece and piece.name() == Piece.KING:
-            self._king_pos[piece.color()] = square
+            self._king_pos[piece.color().value] = square
 
     def remove_piece(self, square: Square) -> None:
         self.set_piece(square, None)
@@ -80,10 +77,10 @@ class Board:
         return False
 
     def get_pieces_by_color(self, color: Color) -> List[Piece]:
-        return list(self._pieces_by_square[color].items())
+        return list(self._pieces_by_square[color.value].items())
 
     def get_king_square(self, color: Color) -> Square:
-        return self._king_pos[color]
+        return self._king_pos[color.value]
 
     def get_material_count(self, color: Color) -> int:
         values = [piece.material_value() for square, piece in self.get_pieces_by_color(color)]
