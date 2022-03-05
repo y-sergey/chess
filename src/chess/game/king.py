@@ -82,3 +82,30 @@ class King(Piece):
         for dest in [short_castle_square, long_castle_square]:
             if self.__can_castle(src, dest, game_board):
                 yield Move(source=src, dest=dest, piece=self)
+
+    def is_threatened_on_line(self, src: Square, dst: Square, game_board) -> bool:
+        rank_diff = abs(dst.rank - src.rank)
+        file_diff = abs(dst.file - src.file)
+        same_diagonal = rank_diff == file_diff
+        same_line = rank_diff == 0 or file_diff == 0
+        if not same_diagonal or not same_line:
+            return False
+        rank_step = rank_diff // max(abs(rank_diff), 1)
+        file_step = file_diff // max(abs(file_diff), 1)
+        square = dst.add_steps(file_steps=file_step, rank_steps=rank_step)
+        piece = None
+        while File.is_valid(square.file) and Rank.is_valid(square.rank):
+            piece = game_board.get_piece(square)
+            if piece:
+                break
+            else:
+                square = square.add_steps(file_steps=file_step, rank_steps=rank_step)
+        if not piece:
+            return False
+        if piece.color() == self.color():
+            return False
+        if same_diagonal and (piece.name() == Piece.QUEEN or piece.name() == Piece.BISHOP):
+            return True
+        if same_line and (piece.name() == Piece.QUEEN or piece.name() == Piece.ROOK):
+            return True
+        return False
