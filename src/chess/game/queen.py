@@ -6,6 +6,8 @@ from chess.game.square import Square
 
 
 class Queen(Piece):
+    _MOVE_STEPS = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
+
     def __init__(self, color):
         Piece.__init__(self, Piece.QUEEN, color, material_value=9)
 
@@ -16,5 +18,4 @@ class Queen(Piece):
         return same_line and not game_board.has_pieces_between(src, dst)
 
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
-        rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
-        return super()._search_available_moves_by_steps(src, game_board, rank_and_file_steps)
+        return super()._search_available_moves_by_steps(src, game_board, Queen._MOVE_STEPS)

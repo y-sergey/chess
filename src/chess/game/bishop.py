@@ -6,6 +6,8 @@ from chess.game.square import Square
 
 
 class Bishop(Piece):
+    _MOVE_STEPS = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
     def __init__(self, color):
         Piece.__init__(self, Piece.BISHOP, color, material_value=3)
 
@@ -16,5 +18,4 @@ class Bishop(Piece):
         return same_diagonal and not game_board.has_pieces_between(src, dst)
 
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
-        rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-        return super()._search_available_moves_by_steps(src, game_board, rank_and_file_steps)
+        return super()._search_available_moves_by_steps(src, game_board, Bishop._MOVE_STEPS)
