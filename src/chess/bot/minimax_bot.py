@@ -25,20 +25,11 @@ class MiniMaxBot:
     def move(self) -> Move:
         self._processed_moves = 0
         self._processed_combinations = 0
-
         start_time_ns = time.perf_counter_ns()
 
-        max_advantage = -math.inf
-        best_move = None
-        depth = 2
-        for move in self._get_moves_to_evaluate(self.color()):
-            move_success = self._move(move)
-            assert move_success
-            advantage = self._run_minimax(self._color, depth)
-            self._game.undo_move()
-            if advantage > max_advantage:
-                best_move = move
-                max_advantage = advantage
+        depth = 3
+        max_advantage, best_move = self._run_minimax(self.color(), depth, None)
+        assert best_move is not None
 
         end_time_ns = time.perf_counter_ns()
         elapsed_ns = end_time_ns - start_time_ns
@@ -51,39 +42,44 @@ class MiniMaxBot:
         print(f'Combinations per seconds - {combinations_per_sec}')
         return best_move
 
-    def _run_minimax(self, color: Color, depth: int) -> float:
+    def _run_minimax(self, color: Color, depth: int, last_move: Move) -> float:
         if self._game.result() == Result.STALEMATE:
-            return 0
+            return 0, last_move
         if self._game.result() == Result.CHECKMATE:
-            return (
+            advantage = (
                 -_CHECKMATE_ADVANTAGE if self._game.current_player() == color
                 else _CHECKMATE_ADVANTAGE)
+            return advantage, last_move
         if depth == 0:
             # print(self._game.get_current_moves())
             self._processed_combinations = self._processed_combinations + 1
             advantage = self._game.board().get_material_advantage(color)
-            return advantage
+            return advantage, last_move
 
         if self._game.current_player() == color:
             max_advantage = -math.inf
+            best_move = None
             for move in self._get_moves_to_evaluate(color):
                 move_success = self._move(move)
                 assert move_success
-                advantage = self._run_minimax(color, depth - 1)
+                advantage, _ = self._run_minimax(color, depth - 1, move)
                 self._game.undo_move()
                 if advantage > max_advantage:
                     max_advantage = advantage
-            return max_advantage
+                    best_move = move
+            return max_advantage, best_move
         else:
             min_advantage = math.inf
+            best_move = None
             for move in self._get_moves_to_evaluate(color.opposite()):
                 move_success = self._move(move)
                 assert move_success
-                advantage = self._run_minimax(color, depth - 1)
+                advantage, _ = self._run_minimax(color, depth - 1, move)
                 self._game.undo_move()
                 if advantage < min_advantage:
                     min_advantage = advantage
-            return min_advantage
+                    best_move = None
+            return min_advantage, best_move
 
     def _move(self, move: Move) -> bool:
         self._processed_moves = self._processed_moves + 1
