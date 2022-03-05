@@ -15,7 +15,7 @@ def main():
     _game.validate_and_move(
         Square(file=File.E, rank=Rank.R2),
         Square(file=File.E, rank=Rank.R4))
-    profile.run('_bot.move()', sort='tottime')
+    profile.run('_bot.move()', sort='cumtime')
 
 
 if __name__ == '__main__':
