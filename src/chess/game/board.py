@@ -25,24 +25,24 @@ class Board:
         self._king_pos = [None, None]
         self._pieces_by_square = [{}, {}]
         # Pawns
-        for file in range(File.FILE_A, File.FILE_H + 1):
+        for file in range(File.A, File.H + 1):
             self.set_piece(Square(rank=Rank.RANK_2, file=file), Pawn(Color.WHITE))
             self.set_piece(Square(rank=Rank.RANK_7, file=file), Pawn(Color.BLACK))
 
         for rank, color in ((Rank.RANK_1, Color.WHITE), (Rank.RANK_8, Color.BLACK)):
             # Rooks
-            for file in [File.FILE_A, File.FILE_H]:
+            for file in [File.A, File.H]:
                 self.set_piece(Square(rank=rank, file=file), Rook(color))
             # Knights
-            for file in [File.FILE_B, File.FILE_G]:
+            for file in [File.B, File.G]:
                 self.set_piece(Square(rank=rank, file=file), Knight(color))
             # Bishops
-            for file in [File.FILE_C, File.FILE_F]:
+            for file in [File.C, File.F]:
                 self.set_piece(Square(rank=rank, file=file), Bishop(color))
             # Queen
-            self.set_piece(Square(rank=rank, file=File.FILE_D), Queen(color))
+            self.set_piece(Square(rank=rank, file=File.D), Queen(color))
             # King
-            self.set_piece(Square(rank=rank, file=File.FILE_E), King(color))
+            self.set_piece(Square(rank=rank, file=File.E), King(color))
 
     def get_piece(self, square: Square) -> Piece:
         return self._pieces[square.rank][square.file]

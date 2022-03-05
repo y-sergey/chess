@@ -18,15 +18,15 @@ class Rank:
 
 
 class File:
-    FILE_A = 0
-    FILE_B = 1
-    FILE_C = 2
-    FILE_D = 3
-    FILE_E = 4
-    FILE_F = 5
-    FILE_G = 6
-    FILE_H = 7
+    A = 0
+    B = 1
+    C = 2
+    D = 3
+    E = 4
+    F = 5
+    G = 6
+    H = 7
 
     @staticmethod
     def is_valid(file: int) -> bool:
-        return File.FILE_A <= file <= File.FILE_H
+        return File.A <= file <= File.H

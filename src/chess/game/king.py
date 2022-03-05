@@ -10,7 +10,7 @@ from chess.game.square import Square
 
 
 class King(Piece):
-    _START_FILE = File.FILE_E
+    _START_FILE = File.E
 
     def __init__(self, color):
         Piece.__init__(self, Piece.KING, color, material_value=sys.maxsize)
@@ -60,11 +60,11 @@ class King(Piece):
 
     @staticmethod
     def __get_castle_rook_file(dst: Square) -> File:
-        return File.FILE_H if dst.file > King._START_FILE else File.FILE_A
+        return File.H if dst.file > King._START_FILE else File.A
 
     @staticmethod
     def __get_target_castle_rook_file(dst: Square) -> File:
-        return File.FILE_F if dst.file > King._START_FILE else File.FILE_D
+        return File.F if dst.file > King._START_FILE else File.D
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = abs(dst.rank - src.rank)
@@ -76,8 +76,8 @@ class King(Piece):
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
         rank_and_file_steps = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
         moves = super()._get_available_moves_by_steps(src, game_board, rank_and_file_steps)
-        short_castle_square = Square(rank=self._start_rank, file=File.FILE_G)
-        long_castle_square = Square(rank=self._start_rank, file=File.FILE_C)
+        short_castle_square = Square(rank=self._start_rank, file=File.G)
+        long_castle_square = Square(rank=self._start_rank, file=File.C)
         for dest in [short_castle_square, long_castle_square]:
             if self.__can_castle(src, dest, game_board):
                 moves.append(Move(source=src, dest=dest, piece=self))
