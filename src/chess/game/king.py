@@ -14,7 +14,7 @@ class King(Piece):
 
     def __init__(self, color):
         Piece.__init__(self, Piece.KING, color, material_value=sys.maxsize)
-        self._start_rank = Rank.RANK_1 if color == Color.WHITE else Rank.RANK_8
+        self._start_rank = Rank.R1 if color == Color.WHITE else Rank.R8
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
         return (self.__can_castle(src, dst, game_board) if self.is_castle_move(src, dst)

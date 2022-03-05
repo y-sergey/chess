@@ -26,10 +26,10 @@ class Board:
         self._pieces_by_square = [{}, {}]
         # Pawns
         for file in range(File.A, File.H + 1):
-            self.set_piece(Square(rank=Rank.RANK_2, file=file), Pawn(Color.WHITE))
-            self.set_piece(Square(rank=Rank.RANK_7, file=file), Pawn(Color.BLACK))
+            self.set_piece(Square(rank=Rank.R2, file=file), Pawn(Color.WHITE))
+            self.set_piece(Square(rank=Rank.R7, file=file), Pawn(Color.BLACK))
 
-        for rank, color in ((Rank.RANK_1, Color.WHITE), (Rank.RANK_8, Color.BLACK)):
+        for rank, color in ((Rank.R1, Color.WHITE), (Rank.R8, Color.BLACK)):
             # Rooks
             for file in [File.A, File.H]:
                 self.set_piece(Square(rank=rank, file=file), Rook(color))
