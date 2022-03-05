@@ -84,15 +84,15 @@ class King(Piece):
                 yield Move(source=src, dest=dest, piece=self)
 
     def is_threatened_on_line(self, src: Square, dst: Square, game_board) -> bool:
-        rank_diff = abs(dst.rank - src.rank)
-        file_diff = abs(dst.file - src.file)
+        rank_diff = dst.rank - src.rank
+        file_diff = dst.file - src.file
         same_diagonal = rank_diff == file_diff
         same_line = rank_diff == 0 or file_diff == 0
-        if not same_diagonal or not same_line:
+        if not (same_diagonal or same_line):
             return False
         rank_step = rank_diff // max(abs(rank_diff), 1)
         file_step = file_diff // max(abs(file_diff), 1)
-        square = dst.add_steps(file_steps=file_step, rank_steps=rank_step)
+        square = src.add_steps(file_steps=file_step, rank_steps=rank_step)
         piece = None
         while File.is_valid(square.file) and Rank.is_valid(square.rank):
             piece = game_board.get_piece(square)

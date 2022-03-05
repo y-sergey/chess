@@ -141,7 +141,7 @@ class Game:
         moved_square = move.dest
         moved_piece = self._board.get_piece(moved_square)
         return (moved_piece.threatens(moved_square, king_square, self._board)
-                or king.is_threatened_on_line(king_square, moved_square, self._board))
+                or king.is_threatened_on_line(king_square, move.source, self._board))
 
     def _has_valid_moves(self, color: Color) -> bool:
         return len(list(itertools.islice(self.get_available_moves(color), 0, 1))) > 0
