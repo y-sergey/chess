@@ -83,7 +83,7 @@ class Piece:
                                       game_board,
                                       rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         for rank_step, file_step in rank_and_file_steps:
-            dest = src.add_file(file_step).add_rank(rank_step)
+            dest = src.add_steps(file_steps=file_step, rank_steps=rank_step)
             if File.is_valid(dest.file) and Rank.is_valid(dest.rank):
                 target = game_board.get_piece(dest)
                 if not target or target.color() != self.color():
