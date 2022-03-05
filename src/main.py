@@ -120,6 +120,7 @@ def run_game():
         if player == bot.color():
             bot_move = bot.move()
             result = game.validate_and_move(bot_move.source, bot_move.dest, bot_move.pawn_promotion_piece)
+            assert result
         # Human move
         else:
             prompt = 'Make a move or type "exit" to exit: '

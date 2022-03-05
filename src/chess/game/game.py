@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 from enum import unique
 from typing import List
@@ -17,6 +18,13 @@ class Result(Enum):
     STALEMATE = 2
 
 
+@dataclass
+class State:
+    is_check: bool
+    result: Result
+    turn: Color
+
+
 class Game:
     def __init__(self):
         self._board = Board()
@@ -24,6 +32,7 @@ class Game:
         self._is_check = False
         self._result = None
         self._moves = []
+        self._states = []
 
     def board(self) -> Board:
         return self._board
@@ -56,16 +65,18 @@ class Game:
         if self._is_king_in_check(self._turn):
             self._undo_move()
             return False
+        self._save_game_state()
         self._update_game_state()
         return True
 
     def move(self, move: Move) -> None:
         self._apply_move(move)
+        self._save_game_state()
         self._update_game_state()
 
     def undo_move(self) -> None:
         self._undo_move()
-        self._update_game_state()
+        self._restore_game_state()
 
     def _update_game_state(self) -> None:
         next_player = self._turn.opposite()
@@ -76,6 +87,16 @@ class Game:
         else:
             self._result = None
         self._turn = next_player
+
+    def _save_game_state(self):
+        state = State(self._is_check, self._result, self._turn)
+        self._states.append(state)
+
+    def _restore_game_state(self):
+        state = self._states.pop()
+        self._is_check = state.is_check
+        self._result = state.result
+        self._turn = state.turn
 
     def _apply_move(self, move: Move) -> None:
         piece = move.piece
