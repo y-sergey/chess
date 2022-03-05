@@ -67,32 +67,28 @@ class Piece:
                                          src: Square,
                                          game_board,
                                          rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
-        moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_steps(file_steps=file_step, rank_steps=rank_step)
             while File.is_valid(dest.file) and Rank.is_valid(dest.rank):
                 target = game_board.get_piece(dest)
                 if not target or target.color() != self.color():
                     move = Move(source=src, dest=dest, piece=self, captured=target)
-                    moves.append(move)
+                    yield move
                     dest = dest.add_steps(file_steps=file_step, rank_steps=rank_step)
                 if target is not None:
                     break
-        return moves
 
     def _get_available_moves_by_steps(self,
                                       src: Square,
                                       game_board,
                                       rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
-        moves = []
         for rank_step, file_step in rank_and_file_steps:
             dest = src.add_file(file_step).add_rank(rank_step)
             if File.is_valid(dest.file) and Rank.is_valid(dest.rank):
                 target = game_board.get_piece(dest)
                 if not target or target.color() != self.color():
                     move = Move(source=src, dest=dest, piece=self, captured=target)
-                    moves.append(move)
-        return moves
+                    yield move
 
     def __str__(self) -> str:
         return f'{self._name} - {self._color.name.lower()}'

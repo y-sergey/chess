@@ -58,7 +58,6 @@ class Pawn(Piece):
 
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
         step_by_one = src.add_rank(self._step)
-        moves = []
         can_promote = src.rank == self._end_rank - self._step and not game_board.has_piece(step_by_one)
         promo_squares = []
 
@@ -66,11 +65,11 @@ class Pawn(Piece):
             if can_promote:
                 promo_squares.append(step_by_one)
             else:
-                moves.append(Move(source=src, dest=step_by_one, piece=self))
+                yield Move(source=src, dest=step_by_one, piece=self)
             if src.rank == self._start_rank:
                 step_by_two = step_by_one.add_rank(self._step)
                 if not game_board.has_piece(step_by_two):
-                    moves.append(Move(source=src, dest=step_by_two, piece=self))
+                    yield Move(source=src, dest=step_by_two, piece=self)
 
         next_rank = src.rank + self._step
         left_file = src.file + 1
@@ -85,24 +84,21 @@ class Pawn(Piece):
                 if square.rank == self._end_rank:
                     promo_squares.append(square)
                 else:
-                    moves.append(Move(source=src, dest=square, piece=self, captured=piece))
+                    yield Move(source=src, dest=square, piece=self, captured=piece)
 
-        moves.extend(self._get_promo_moves(src, promo_squares, game_board))
-        return moves
+        for move in self._get_promo_moves(src, promo_squares, game_board):
+            yield move
 
     def _get_promo_moves(self, src: Square, dest_list: List[Square], game_board) -> List[Move]:
-        moves = []
         color = self.color()
         for dest in dest_list:
             for promo_piece in [Queen(color), Rook(color), Bishop(color), Knight(color)]:
-                moves.append(
-                    Move(
-                        piece=self,
-                        source=src,
-                        dest=dest,
-                        pawn_promotion_piece=promo_piece,
-                        captured=game_board.get_piece(dest)))
-        return moves
+                yield Move(
+                    piece=self,
+                    source=src,
+                    dest=dest,
+                    pawn_promotion_piece=promo_piece,
+                    captured=game_board.get_piece(dest))
 
     def _validate_promotion(self, dst: Square, pawn_promotion_piece: Piece) -> bool:
         if dst.rank != self._end_rank and pawn_promotion_piece:

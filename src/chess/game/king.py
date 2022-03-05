@@ -75,10 +75,10 @@ class King(Piece):
                 or file_diff == 1 and rank_diff == 1)
 
     def get_available_moves(self, src: Square, game_board) -> List[Move]:
-        moves = super()._get_available_moves_by_steps(src, game_board, King._MOVE_STEPS)
+        for move in super()._get_available_moves_by_steps(src, game_board, King._MOVE_STEPS):
+            yield move
         short_castle_square = Square(rank=self._start_rank, file=File.G)
         long_castle_square = Square(rank=self._start_rank, file=File.C)
         for dest in [short_castle_square, long_castle_square]:
             if self.__can_castle(src, dest, game_board):
-                moves.append(Move(source=src, dest=dest, piece=self))
-        return moves
+                yield Move(source=src, dest=dest, piece=self)
