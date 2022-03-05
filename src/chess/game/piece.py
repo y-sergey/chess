@@ -69,13 +69,13 @@ class Piece:
                                          rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         moves = []
         for rank_step, file_step in rank_and_file_steps:
-            dest = src.add_file(file_step).add_rank(rank_step)
+            dest = src.add_steps(file_steps=file_step, rank_steps=rank_step)
             while File.is_valid(dest.file) and Rank.is_valid(dest.rank):
                 target = game_board.get_piece(dest)
                 if not target or target.color() != self.color():
                     move = Move(source=src, dest=dest, piece=self, captured=target)
                     moves.append(move)
-                    dest = dest.add_file(file_step).add_rank(rank_step)
+                    dest = dest.add_steps(file_steps=file_step, rank_steps=rank_step)
                 if target is not None:
                     break
         return moves
