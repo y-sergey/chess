@@ -47,15 +47,11 @@ class Display:
             for col in range(constants.NUM_FILES):
                 square = Square(rank=row, file=col)
                 piece = self._board.get_piece_by_square(square)
-                code = Display._get_square(row, col) if piece is None else _UNICODES[piece.name()][piece.color()]
+                code = chr(0x00B7) if piece is None else _UNICODES[piece.name()][piece.color()]
                 print(code, end=' ')
             print(row + 1)
         Display._print_col_indices()
         print()
-
-    @staticmethod
-    def _get_square(row, col) -> str:
-        return ' ' if (row + col) % 2 == 0 else chr(0x00B7)
 
     @staticmethod
     def _print_col_indices() -> None:
