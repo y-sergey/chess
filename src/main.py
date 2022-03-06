@@ -1,5 +1,4 @@
 from chess.bot.minimax_bot import MiniMaxBot
-from chess.console.display import Display
 from chess.game.bishop import Bishop
 from chess.game.board import File
 from chess.game.board import Rank
@@ -57,8 +56,7 @@ def get_move(game: Game, move_text: str) -> Move:
 
 def run_game():
     game = Game()
-    display = Display(game.board())
-    display.show()
+    print(game.board().to_string())
 
     # Some test moves
     test_moves = [
@@ -102,7 +100,7 @@ def run_game():
             raise Exception(f'Illegal move {move}')
         if game.is_check():
             raise Exception('Unexpected check')
-        display.show()
+        print(game.board().to_string())
         print(f'Last move - {move}')
 
     bot = MiniMaxBot(Color.BLACK, game)
@@ -131,7 +129,7 @@ def run_game():
             result = False
             if src:
                 result = game.validate_and_move(src, dst, promo_piece)
-        display.show()
+        print(game.board().to_string())
         if not result:
             print(f'Move \'{text}\' is illegal')
 

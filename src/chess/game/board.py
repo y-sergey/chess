@@ -13,6 +13,35 @@ from chess.game.queen import Queen
 from chess.game.rook import Rook
 from chess.game.square import Square
 
+# Black and white piece colors are swapped
+# to work correctly on black-and-white console.
+_UNICODES = {
+    Piece.PAWN: {
+        Color.BLACK: chr(0x2659),
+        Color.WHITE: chr(0x265F)
+    },
+    Piece.ROOK: {
+        Color.BLACK: chr(0x2656),
+        Color.WHITE: chr(0x265C)
+    },
+    Piece.KNIGHT: {
+        Color.BLACK: chr(0x2658),
+        Color.WHITE: chr(0x265E)
+    },
+    Piece.BISHOP: {
+        Color.BLACK: chr(0x2657),
+        Color.WHITE: chr(0x265D)
+    },
+    Piece.KING: {
+        Color.BLACK: chr(0x2654),
+        Color.WHITE: chr(0x265A)
+    },
+    Piece.QUEEN: {
+        Color.BLACK: chr(0x2655),
+        Color.WHITE: chr(0x265B)
+    }
+}
+
 
 class Board:
 
@@ -94,3 +123,24 @@ class Board:
         player_material = self.get_material_count(color)
         opponent_material = self.get_material_count(color.opposite())
         return player_material - opponent_material
+
+    def to_string(self):
+        result = '\n' + Board._print_col_indices()
+        for row in range(constants.NUM_RANKS - 1, -1, -1):
+            result += str(row + 1) + ' '
+            for col in range(constants.NUM_FILES):
+                square = Square(rank=row, file=col)
+                piece = self.get_piece_by_square(square)
+                code = chr(0x00B7) if piece is None else _UNICODES[piece.name()][piece.color()]
+                result += code + ' '
+            result += str(row + 1) + '\n'
+        result += Board._print_col_indices()
+        return result
+
+    @staticmethod
+    def _print_col_indices() -> str:
+        result = '  '
+        for col in range(constants.NUM_FILES):
+            result += chr(ord('A') + col) + ' '
+        result += '\n'
+        return result
