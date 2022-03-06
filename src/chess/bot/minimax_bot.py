@@ -27,8 +27,8 @@ class MiniMaxBot:
         self._processed_combinations = 0
         start_time_ns = time.perf_counter_ns()
 
-        depth = 3
-        max_advantage, best_move = self._run_minimax(self.color(), depth, None)
+        depth = 5
+        max_advantage, best_move = self._run_minimax(self.color(), depth, None, -math.inf, math.inf)
         assert best_move is not None
 
         end_time_ns = time.perf_counter_ns()
@@ -42,7 +42,7 @@ class MiniMaxBot:
         print(f'Combinations per seconds - {combinations_per_sec}')
         return best_move
 
-    def _run_minimax(self, color: Color, depth: int, last_move: Move) -> float:
+    def _run_minimax(self, color: Color, depth: int, last_move: Move, alpha, beta) -> float:
         if self._game.result() == Result.STALEMATE:
             return 0, last_move
         if self._game.result() == Result.CHECKMATE:
@@ -62,11 +62,14 @@ class MiniMaxBot:
             for move in self._get_moves_to_evaluate(color):
                 move_success = self._move(move)
                 assert move_success
-                advantage, _ = self._run_minimax(color, depth - 1, move)
+                advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
                 self._game.undo_move()
                 if advantage > max_advantage:
                     max_advantage = advantage
                     best_move = move
+                if advantage >= beta:
+                    break
+                alpha = max(alpha, advantage)
             return max_advantage, best_move
         else:
             min_advantage = math.inf
@@ -74,11 +77,14 @@ class MiniMaxBot:
             for move in self._get_moves_to_evaluate(color.opposite()):
                 move_success = self._move(move)
                 assert move_success
-                advantage, _ = self._run_minimax(color, depth - 1, move)
+                advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
                 self._game.undo_move()
                 if advantage < min_advantage:
                     min_advantage = advantage
                     best_move = None
+                if advantage <= alpha:
+                    break
+                beta = min(beta, advantage)
             return min_advantage, best_move
 
     def _move(self, move: Move) -> bool:
