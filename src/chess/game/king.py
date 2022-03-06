@@ -86,7 +86,7 @@ class King(Piece):
     def is_threatened_on_line(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank
         file_diff = dst.file - src.file
-        same_diagonal = rank_diff == file_diff
+        same_diagonal = abs(rank_diff) == abs(file_diff)
         same_line = rank_diff == 0 or file_diff == 0
         if not (same_diagonal or same_line):
             return False

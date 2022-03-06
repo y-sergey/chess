@@ -62,7 +62,7 @@ class Game:
             captured=target_piece,
             pawn_promotion_piece=pawn_promotion)
         self._apply_move(move)
-        if not self._is_last_move_valid(self._turn):
+        if not self._is_last_move_valid(self._turn, move, self._is_check):
             self._undo_move()
             return False
         self._save_game_state()
@@ -128,12 +128,16 @@ class Game:
             self._board.remove_piece(target_rook_square)
             self._board.set_piece(rook_square, rook)
 
-    def _is_last_move_valid(self, color: Color) -> bool:
+    def _is_last_move_valid(self, color: Color, move: Move, is_check: bool) -> bool:
         king_square = self._board.get_king_square(color)
-        for square, piece in self._board.get_pieces_by_color(color.opposite()):
-            if piece.threatens(square, king_square, self._board):
-                return False
-        return True
+        if move.piece.name() == Piece.KING or is_check:
+            for square, piece in self._board.get_pieces_by_color(color.opposite()):
+                if piece.threatens(square, king_square, self._board):
+                    return False
+            return True
+        else:
+            king = self._board.get_piece_by_square(king_square)
+            return not king.is_threatened_on_line(king_square, move.source, self._board)
 
     def _is_check_after_move(self, color: Color, move: Move) -> bool:
         king_square = self._board.get_king_square(color)
@@ -150,10 +154,11 @@ class Game:
         return list(self._moves)
 
     def get_available_moves(self, color: Color) -> List[Move]:
+        is_check = self._is_check
         for square, piece in self._board.get_pieces_by_color(color):
             for move in piece.get_available_moves(square, self._board):
                 self._apply_move(move)
-                move_valid = self._is_last_move_valid(color)
+                move_valid = self._is_last_move_valid(color, move, is_check)
                 self._undo_move()
                 if move_valid:
                     yield move
