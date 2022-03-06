@@ -46,7 +46,7 @@ class Display:
             print(row + 1, end=' ')
             for col in range(constants.NUM_FILES):
                 square = Square(rank=row, file=col)
-                piece = self._board.get_piece(square)
+                piece = self._board.get_piece_by_square(square)
                 code = Display._get_square(row, col) if piece is None else _UNICODES[piece.name()][piece.color()]
                 print(code, end=' ')
             print(row + 1)

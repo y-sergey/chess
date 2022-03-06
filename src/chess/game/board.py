@@ -43,8 +43,11 @@ class Board:
             # King
             self.set_piece(Square(rank=rank, file=File.E), King(color))
 
-    def get_piece(self, square: Square) -> Piece:
+    def get_piece_by_square(self, square: Square) -> Piece:
         return self._pieces[square.rank][square.file]
+
+    def get_piece(self, file, rank) -> Piece:
+        return self._pieces[rank][file]
 
     def set_piece(self, square: Square, piece: Piece) -> None:
         self._pieces[square.rank][square.file] = piece
@@ -59,7 +62,7 @@ class Board:
         self.set_piece(square, None)
 
     def has_piece(self, square: Square) -> bool:
-        return self.get_piece(square) is not None
+        return self.get_piece_by_square(square) is not None
 
     def has_pieces_between(self, src: Square, dst: Square) -> bool:
         rank_diff = dst.rank - src.rank

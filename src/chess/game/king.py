@@ -34,7 +34,7 @@ class King(Piece):
     def __can_castle(self, src: Square, dst: Square, game_board) -> bool:
         rook_file = King.__get_castle_rook_file(dst)
         rook_square = Square(rank=dst.rank, file=rook_file)
-        rook = game_board.get_piece(rook_square)
+        rook = game_board.get_piece_by_square(rook_square)
 
         # The king must be on the start square
         if src.file != King._START_FILE or src.rank != self._start_rank:
@@ -95,7 +95,7 @@ class King(Piece):
         square = src.add_steps(file_steps=file_step, rank_steps=rank_step)
         piece = None
         while File.is_valid(square.file) and Rank.is_valid(square.rank):
-            piece = game_board.get_piece(square)
+            piece = game_board.get_piece_by_square(square)
             if piece:
                 break
             else:

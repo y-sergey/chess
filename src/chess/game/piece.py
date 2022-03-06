@@ -68,13 +68,16 @@ class Piece:
                                          game_board,
                                          rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         for rank_step, file_step in rank_and_file_steps:
-            dest = src.add_steps(file_steps=file_step, rank_steps=rank_step)
-            while File.is_valid(dest.file) and Rank.is_valid(dest.rank):
-                target = game_board.get_piece(dest)
+            rank = src.rank + rank_step
+            file = src.file + file_step
+            while File.is_valid(file) and Rank.is_valid(rank):
+                target = game_board.get_piece(file, rank)
                 if not target or target.color() != self.color():
-                    move = Move(source=src, dest=dest, piece=self, captured=target)
+                    move = Move(source=src, dest=Square(file=file, rank=rank),
+                                piece=self, captured=target)
                     yield move
-                    dest = dest.add_steps(file_steps=file_step, rank_steps=rank_step)
+                    rank = rank + rank_step
+                    file = file + file_step
                 if target is not None:
                     break
 
@@ -83,11 +86,13 @@ class Piece:
                                       game_board,
                                       rank_and_file_steps: List[Tuple[int, int]]) -> List[Move]:
         for rank_step, file_step in rank_and_file_steps:
-            dest = src.add_steps(file_steps=file_step, rank_steps=rank_step)
-            if File.is_valid(dest.file) and Rank.is_valid(dest.rank):
-                target = game_board.get_piece(dest)
+            file = src.file + file_step
+            rank = src.rank + rank_step
+            if File.is_valid(file) and Rank.is_valid(rank):
+                target = game_board.get_piece(file, rank)
                 if not target or target.color() != self.color():
-                    move = Move(source=src, dest=dest, piece=self, captured=target)
+                    move = Move(source=src, dest=Square(file=file, rank=rank),
+                                piece=self, captured=target)
                     yield move
 
     def __str__(self) -> str:

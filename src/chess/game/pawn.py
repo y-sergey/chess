@@ -79,7 +79,7 @@ class Pawn(Piece):
             files = filter(File.is_valid, [left_file, right_file])
             capture_squares = map(lambda f: Square(rank=next_rank, file=f), files)
         for square in capture_squares:
-            piece = game_board.get_piece(square)
+            piece = game_board.get_piece_by_square(square)
             if piece and piece.color() != self.color():
                 if square.rank == self._end_rank:
                     promo_squares.append(square)
@@ -98,7 +98,7 @@ class Pawn(Piece):
                     source=src,
                     dest=dest,
                     pawn_promotion_piece=promo_piece,
-                    captured=game_board.get_piece(dest))
+                    captured=game_board.get_piece_by_square(dest))
 
     def _validate_promotion(self, dst: Square, pawn_promotion_piece: Piece) -> bool:
         if dst.rank != self._end_rank and pawn_promotion_piece:

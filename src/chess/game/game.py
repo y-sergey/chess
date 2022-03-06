@@ -41,8 +41,8 @@ class Game:
         return self._turn
 
     def validate_and_move(self, src: Square, dst: Square, pawn_promotion: Piece = None) -> bool:
-        piece = self._board.get_piece(src)
-        target_piece = self._board.get_piece(dst)
+        piece = self._board.get_piece_by_square(src)
+        target_piece = self._board.get_piece_by_square(dst)
 
         if piece is None:
             return False
@@ -107,7 +107,7 @@ class Game:
 
         if piece.name() == Piece.KING and piece.is_castle_move(move.source, move.dest):
             rook_square = piece.get_castle_rook_square(move.dest)
-            rook = self.board().get_piece(rook_square)
+            rook = self.board().get_piece_by_square(rook_square)
             target_rook_square = piece.get_target_castle_rook_square(move.dest)
             self._board.remove_piece(rook_square)
             self._board.set_piece(target_rook_square, rook)
@@ -124,7 +124,7 @@ class Game:
         if piece.name() == Piece.KING and piece.is_castle_move(move.source, move.dest):
             rook_square = piece.get_castle_rook_square(move.dest)
             target_rook_square = piece.get_target_castle_rook_square(move.dest)
-            rook = self.board().get_piece(target_rook_square)
+            rook = self.board().get_piece_by_square(target_rook_square)
             self._board.remove_piece(target_rook_square)
             self._board.set_piece(rook_square, rook)
 
@@ -137,9 +137,9 @@ class Game:
 
     def _is_check_after_move(self, color: Color, move: Move) -> bool:
         king_square = self._board.get_king_square(color)
-        king = self._board.get_piece(king_square)
+        king = self._board.get_piece_by_square(king_square)
         moved_square = move.dest
-        moved_piece = self._board.get_piece(moved_square)
+        moved_piece = self._board.get_piece_by_square(moved_square)
         return (moved_piece.threatens(moved_square, king_square, self._board)
                 or king.is_threatened_on_line(king_square, move.source, self._board))
 
