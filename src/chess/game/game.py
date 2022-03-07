@@ -140,10 +140,14 @@ class Game:
             return not king.is_threatened_on_line(king_square, move.source, self._board)
 
     def _is_check_after_move(self, color: Color, move: Move) -> bool:
-        king_square = self._board.get_king_square(color)
-        king = self._board.get_piece_by_square(king_square)
         moved_square = move.dest
         moved_piece = self._board.get_piece_by_square(moved_square)
+        if moved_piece.name() == Piece.KING and moved_piece.is_castle_move(move.source, move.dest):
+            moved_square = moved_piece.get_target_castle_rook_square(move.dest)
+            moved_piece = self._board.get_piece_by_square(moved_square)
+
+        king_square = self._board.get_king_square(color)
+        king = self._board.get_piece_by_square(king_square)
         return (moved_piece.threatens(moved_square, king_square, self._board)
                 or king.is_threatened_on_line(king_square, move.source, self._board))
 
