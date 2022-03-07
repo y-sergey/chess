@@ -102,6 +102,13 @@ class Board:
             square = Square(file=square.file + file_step, rank=square.rank + rank_step)
         return False
 
+    def get_all_pieces(self) -> List[Piece]:
+        for rank in range(constants.NUM_RANKS):
+            for file in range(constants.NUM_FILES):
+                piece = self._pieces[rank][file]
+                if piece:
+                    yield Square(rank=rank, file=file), piece
+
     def get_pieces_by_color(self, color: Color) -> List[Piece]:
         for rank in range(constants.NUM_RANKS):
             for file in range(constants.NUM_FILES):

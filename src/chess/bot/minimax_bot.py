@@ -8,7 +8,6 @@ from chess.game.constants import GamePhase
 from chess.game.game import Game
 from chess.game.game import Result
 from chess.game.move import Move
-from chess.game.piece import Piece
 
 _CHECKMATE_ADVANTAGE = 500
 
@@ -90,37 +89,11 @@ class MiniMaxBot:
             return min_advantage, best_move
 
     def _evaluate(self, color: Color) -> int:
-        opponent = color.opposite()
-        score = 0
-        opponent_score = 0
-        has_queen = False
-        opponent_has_queen = False
-        king = None
-        opponent_king = None
-
-        for square, piece in self._game.board().get_pieces_by_color(color):
-            has_queen = has_queen or piece.name() == Piece.QUEEN
-            score += piece.material_value()
-            if piece.name() != Piece.KING:
-                score += piece.position_value(square, GamePhase.MIDDLE_GAME)
-            else:
-                king = piece
-
-        for square, piece in self._game.board().get_pieces_by_color(opponent):
-            opponent_has_queen = opponent_has_queen or piece.name() == Piece.QUEEN
-            opponent_score += piece.material_value()
-            if piece.name() != Piece.KING:
-                opponent_score += piece.position_value(square, GamePhase.MIDDLE_GAME)
-            else:
-                opponent_king = piece
-
-        is_end_game = not has_queen and not opponent_has_queen
-        phase = GamePhase.END_GAME if is_end_game else GamePhase.MIDDLE_GAME
-
-        score += king.position_value(square, phase)
-        opponent_score += opponent_king.position_value(square, phase)
-
-        return score - opponent_score
+        scores = [0, 0]
+        for square, piece in self._game.board().get_all_pieces():
+            idx = piece.color().value
+            scores[idx] += piece.material_value() + piece.position_value(square, GamePhase.MIDDLE_GAME)
+        return scores[idx] - scores[color.opposite().value]
 
     def _move(self, move: Move) -> bool:
         self._processed_moves = self._processed_moves + 1

@@ -2,11 +2,9 @@ from typing import List
 
 from chess.game.color import Color
 from chess.game.constants import File
-from chess.game.constants import GamePhase
 from chess.game.constants import Rank
 from chess.game.move import Move
 from chess.game.piece import Piece
-from chess.game.piece_table_values import KING_END_GAME
 from chess.game.piece_table_values import KING_MIDDLE_GAME
 from chess.game.square import Square
 
@@ -21,7 +19,7 @@ class King(Piece):
             Piece.KING,
             color,
             material_value=20000,
-            piece_table_value=None)
+            piece_table_value=KING_MIDDLE_GAME)
         self._start_rank = Rank.R1 if color == Color.WHITE else Rank.R8
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece: Piece) -> bool:
@@ -117,7 +115,3 @@ class King(Piece):
             return True
         return False
 
-    def position_value(self, square: Square, phase: GamePhase) -> int:
-        table = KING_END_GAME if phase == GamePhase.END_GAME else KING_MIDDLE_GAME
-        rank = square.rank if self.color() == Color.WHITE else Rank.mirror(square.rank)
-        return table[rank][square.file]
