@@ -9,7 +9,7 @@ class Bishop(Piece):
     _MOVE_STEPS = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
     def __init__(self, color):
-        Piece.__init__(self, Piece.BISHOP, color, material_value=3)
+        Piece.__init__(self, Piece.BISHOP, color, material_value=330)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank

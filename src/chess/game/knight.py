@@ -9,7 +9,7 @@ class Knight(Piece):
     _MOVE_STEPS = [(-1, -2), (-1, 2), (1, -2), (1, 2), (2, 1), (2, -1), (-2, 1), (-2, -1)]
 
     def __init__(self, color):
-        Piece.__init__(self, Piece.KNIGHT, color, material_value=3)
+        Piece.__init__(self, Piece.KNIGHT, color, material_value=320)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = abs(dst.rank - src.rank)
