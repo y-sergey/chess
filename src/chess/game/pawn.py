@@ -7,6 +7,7 @@ from chess.game.constants import Rank
 from chess.game.knight import Knight
 from chess.game.move import Move
 from chess.game.piece import Piece
+from chess.game.piece_table_values import PAWN_PST
 from chess.game.queen import Queen
 from chess.game.rook import Rook
 from chess.game.square import Square
@@ -21,7 +22,12 @@ _ELIGIBLE_PROMOTION_PIECES = {
 
 class Pawn(Piece):
     def __init__(self, color: Color):
-        Piece.__init__(self, Piece.PAWN, color, material_value=100)
+        Piece.__init__(
+            self,
+            Piece.PAWN,
+            color,
+            material_value=100,
+            piece_table_value=PAWN_PST)
         if color == Color.WHITE:
             self._start_rank = Rank.R2
             self._end_rank = Rank.R8

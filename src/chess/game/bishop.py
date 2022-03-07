@@ -1,15 +1,22 @@
 from typing import List
 
+from chess.game.color import Color
 from chess.game.move import Move
 from chess.game.piece import Piece
+from chess.game.piece_table_values import BISHOP_PST
 from chess.game.square import Square
 
 
 class Bishop(Piece):
     _MOVE_STEPS = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
-    def __init__(self, color):
-        Piece.__init__(self, Piece.BISHOP, color, material_value=330)
+    def __init__(self, color: Color):
+        Piece.__init__(
+            self,
+            Piece.BISHOP,
+            color,
+            material_value=330,
+            piece_table_value=BISHOP_PST)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank

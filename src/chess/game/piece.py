@@ -3,6 +3,7 @@ from typing import Tuple
 
 from chess.game.color import Color
 from chess.game.constants import File
+from chess.game.constants import GamePhase
 from chess.game.constants import Rank
 from chess.game.move import Move
 from chess.game.square import Square
@@ -16,11 +17,16 @@ class Piece:
     QUEEN = 'Q'
     KING = 'K'
 
-    def __init__(self, name: str, color: Color, material_value: int):
+    def __init__(self,
+                 name: str,
+                 color: Color,
+                 material_value: int,
+                 piece_table_value: List[List[int]]):
         self._name = name
         self._color = color
         self._num_moves = 0
         self._material_value = material_value
+        self._piece_table_value = piece_table_value
 
     def name(self) -> str:
         return self._name
@@ -39,6 +45,10 @@ class Piece:
 
     def material_value(self):
         return self._material_value
+
+    def position_value(self, square: Square, phase: GamePhase) -> int:
+        rank = square.rank if self.color() == Color.WHITE else Rank.mirror(square.rank)
+        return self._piece_table_value[rank][square.file]
 
     def can_move(self, src: Square, dst: Square, game_board, pawn_promotion_piece=None) -> bool:
         """

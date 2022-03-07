@@ -150,7 +150,7 @@ class Game:
     def _has_valid_moves(self, color: Color) -> bool:
         return len(list(itertools.islice(self.get_available_moves(color), 0, 1))) > 0
 
-    def get_current_moves(self):
+    def get_move_history(self):
         return list(self._moves)
 
     def get_available_moves(self, color: Color) -> List[Move]:

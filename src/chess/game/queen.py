@@ -2,6 +2,7 @@ from typing import List
 
 from chess.game.move import Move
 from chess.game.piece import Piece
+from chess.game.piece_table_values import QUEEN_PST
 from chess.game.square import Square
 
 
@@ -9,7 +10,12 @@ class Queen(Piece):
     _MOVE_STEPS = [(-1, -1), (-1, 1), (1, -1), (1, 1), (1, 0), (0, 1), (-1, 0), (0, -1)]
 
     def __init__(self, color):
-        Piece.__init__(self, Piece.QUEEN, color, material_value=900)
+        Piece.__init__(
+            self,
+            Piece.QUEEN,
+            color,
+            material_value=900,
+            piece_table_value=QUEEN_PST)
 
     def threatens(self, src: Square, dst: Square, game_board) -> bool:
         rank_diff = dst.rank - src.rank
