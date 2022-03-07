@@ -112,7 +112,10 @@ def run_game():
         if game.is_check():
             print('CHECK ->')
         advantage = game.board().get_material_advantage(Color.WHITE)
-        print(f'{player.name} to play. Material advantage: {advantage}')
+        if game.get_move_history():
+            move = game.get_move_history()[-1]
+            print(f'Last Move: {move.source}{move.dest}')
+        print(f'{player.name} to play. Material advantage: {advantage // 100}')
 
         # Bot move
         if player == bot.color():
