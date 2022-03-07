@@ -51,7 +51,6 @@ class Board:
             [None for _ in range(constants.NUM_FILES)] for _ in range(constants.NUM_RANKS)
         ]
         self._king_pos = [None, None]
-        self._pieces_by_square = [{}, {}]
         # Pawns
         for file in range(File.A, File.H + 1):
             self.set_piece(Square(rank=Rank.R2, file=file), Pawn(Color.WHITE))
@@ -80,10 +79,6 @@ class Board:
 
     def set_piece(self, square: Square, piece: Piece) -> None:
         self._pieces[square.rank][square.file] = piece
-        self._pieces_by_square[Color.WHITE.value].pop(square, None)
-        self._pieces_by_square[Color.BLACK.value].pop(square, None)
-        if piece:
-            self._pieces_by_square[piece.color().value][square] = piece
         if piece and piece.name() == Piece.KING:
             self._king_pos[piece.color().value] = square
 
@@ -91,7 +86,7 @@ class Board:
         self.set_piece(square, None)
 
     def has_piece(self, square: Square) -> bool:
-        return self.get_piece_by_square(square) is not None
+        return self._pieces[square.rank][square.file] is not None
 
     def has_pieces_between(self, src: Square, dst: Square) -> bool:
         rank_diff = dst.rank - src.rank
@@ -108,14 +103,18 @@ class Board:
         return False
 
     def get_pieces_by_color(self, color: Color) -> List[Piece]:
-        return list(self._pieces_by_square[color.value].items())
+        for rank in range(constants.NUM_RANKS):
+            for file in range(constants.NUM_FILES):
+                piece = self._pieces[rank][file]
+                if piece and piece.color() == color:
+                    yield Square(rank=rank, file=file), piece
 
     def get_king_square(self, color: Color) -> Square:
         return self._king_pos[color.value]
 
     def get_material_count(self, color: Color) -> int:
         count = 0
-        for piece in self._pieces_by_square[color.value].values():
+        for square, piece in self.get_pieces_by_color(color):
             count += piece.material_value()
         return count
 
