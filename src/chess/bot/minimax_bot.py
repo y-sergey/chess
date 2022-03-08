@@ -93,7 +93,7 @@ class MiniMaxBot:
         for square, piece in self._game.board().get_all_pieces():
             idx = piece.color().value
             scores[idx] += piece.material_value() + piece.position_value(square, GamePhase.MIDDLE_GAME)
-        return scores[idx] - scores[color.opposite().value]
+        return scores[color.value] - scores[color.opposite().value]
 
     def _move(self, move: Move) -> bool:
         self._processed_moves = self._processed_moves + 1
