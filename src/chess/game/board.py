@@ -101,7 +101,7 @@ class Board:
         rank = src.rank + rank_step
         file = src.file + file_step
 
-        while src.rank != dst.rank or src.file != dst.file:
+        while rank != dst.rank or file != dst.file:
             if self._has_piece(rank=rank, file=file):
                 return True
             rank += rank_step
