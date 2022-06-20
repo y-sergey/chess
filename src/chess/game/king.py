@@ -97,14 +97,17 @@ class King(Piece):
             return False
         rank_step = rank_diff // max(abs(rank_diff), 1)
         file_step = file_diff // max(abs(file_diff), 1)
-        square = src.add_steps(file_steps=file_step, rank_steps=rank_step)
+
+        rank = src.rank + rank_step
+        file = src.file + file_step
         piece = None
-        while File.is_valid(square.file) and Rank.is_valid(square.rank):
-            piece = game_board.get_piece_by_square(square)
+        while File.is_valid(file) and Rank.is_valid(rank):
+            piece = game_board.get_piece(file=file, rank=rank)
             if piece:
                 break
             else:
-                square = square.add_steps(file_steps=file_step, rank_steps=rank_step)
+                rank += rank_step
+                file += file_step
         if not piece:
             return False
         if piece.color() == self.color():
