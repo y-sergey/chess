@@ -88,18 +88,24 @@ class Board:
     def has_piece(self, square: Square) -> bool:
         return self._pieces[square.rank][square.file] is not None
 
+    def _has_piece(self, rank: int, file: int) -> bool:
+        return self._pieces[rank][file] is not None
+
     def has_pieces_between(self, src: Square, dst: Square) -> bool:
         rank_diff = dst.rank - src.rank
         file_diff = dst.file - src.file
 
         rank_step = rank_diff // max(abs(rank_diff), 1)
         file_step = file_diff // max(abs(file_diff), 1)
-        square = Square(file=src.file + file_step, rank=src.rank + rank_step)
 
-        while square != dst:
-            if self.has_piece(square):
+        rank = src.rank + rank_step
+        file = src.file + file_step
+
+        while src.rank != dst.rank or src.file != dst.file:
+            if self._has_piece(rank=rank, file=file):
                 return True
-            square = Square(file=square.file + file_step, rank=square.rank + rank_step)
+            rank += rank_step
+            file += file_step
         return False
 
     def get_all_pieces(self) -> List[Piece]:
