@@ -61,6 +61,9 @@ class Game:
             piece=piece,
             captured=target_piece,
             pawn_promotion_piece=pawn_promotion)
+        return self.try_move(move)
+
+    def try_move(self, move: Move) -> bool:
         self._apply_move(move)
         if not self._is_last_move_valid(self._turn, move, self._is_check):
             self._undo_move()
@@ -152,12 +155,12 @@ class Game:
                 or king.is_threatened_on_line(king_square, move.source, self._board))
 
     def _has_valid_moves(self, color: Color) -> bool:
-        return len(list(itertools.islice(self.get_available_moves(color), 0, 1))) > 0
+        return len(list(itertools.islice(self.get_valid_moves(color), 0, 1))) > 0
 
     def get_move_history(self):
         return list(self._moves)
 
-    def get_available_moves(self, color: Color) -> List[Move]:
+    def get_valid_moves(self, color: Color) -> List[Move]:
         is_check = self._is_check
         for square, piece in self._board.get_pieces_by_color(color):
             for move in piece.get_available_moves(square, self._board):

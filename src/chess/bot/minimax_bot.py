@@ -62,30 +62,30 @@ class MiniMaxBot:
             best_move = None
             for move in self._get_moves_to_evaluate(color):
                 move_success = self._move(move)
-                assert move_success
-                advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
-                self._game.undo_move()
-                if advantage > max_advantage:
-                    max_advantage = advantage
-                    best_move = move
-                if advantage >= beta:
-                    break
-                alpha = max(alpha, advantage)
+                if move_success:
+                    advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
+                    self._game.undo_move()
+                    if advantage > max_advantage:
+                        max_advantage = advantage
+                        best_move = move
+                    if advantage >= beta:
+                        break
+                    alpha = max(alpha, advantage)
             return max_advantage, best_move
         else:
             min_advantage = math.inf
             best_move = None
             for move in self._get_moves_to_evaluate(color.opposite()):
                 move_success = self._move(move)
-                assert move_success
-                advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
-                self._game.undo_move()
-                if advantage < min_advantage:
-                    min_advantage = advantage
-                    best_move = None
-                if advantage <= alpha:
-                    break
-                beta = min(beta, advantage)
+                if move_success:
+                    advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
+                    self._game.undo_move()
+                    if advantage < min_advantage:
+                        min_advantage = advantage
+                        best_move = None
+                    if advantage <= alpha:
+                        break
+                    beta = min(beta, advantage)
             return min_advantage, best_move
 
     def _evaluate(self, color: Color) -> int:
@@ -96,12 +96,16 @@ class MiniMaxBot:
         return scores[color.value] - scores[color.opposite().value]
 
     def _move(self, move: Move) -> bool:
-        self._processed_moves = self._processed_moves + 1
-        self._game.move(move)
-        return True
+        success = self._game.try_move(move)
+        if success:
+            self._processed_moves = self._processed_moves + 1
+        return success
 
     def _get_moves_to_evaluate(self, color: Color) -> List[Move]:
-        moves = list(self._game.get_available_moves(color))
+        moves = list()
+        for square, piece in self._game.board().get_pieces_by_color(color):
+            for move in piece.get_available_moves(square, self._game.board()):
+                moves.append(move)
         # Consider moves that capture a piece first
-        moves.sort(key=lambda move: move.captured is None)
+        moves.sort(key=lambda m: m.captured is None)
         return moves
