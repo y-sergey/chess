@@ -48,45 +48,30 @@ class MiniMaxBot:
             return 0, last_move
         if self._game.result() == Result.CHECKMATE:
             advantage = (
-                -_CHECKMATE_ADVANTAGE if self._game.current_player() == color
+                -_CHECKMATE_ADVANTAGE if color == self._color
                 else _CHECKMATE_ADVANTAGE)
             return advantage, last_move
         if depth == 0:
             # print(self._game.get_current_moves())
             self._processed_combinations = self._processed_combinations + 1
-            advantage = self._evaluate(color)
+            advantage = self._evaluate(self._color)
             return advantage, last_move
 
-        if self._game.current_player() == color:
-            max_advantage = -math.inf
-            best_move = None
-            for move in self._get_moves_to_evaluate(color):
-                move_success = self._move(move)
-                if move_success:
-                    advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
-                    self._game.undo_move()
-                    if advantage > max_advantage:
-                        max_advantage = advantage
-                        best_move = move
-                    if advantage >= beta:
-                        break
-                    alpha = max(alpha, advantage)
-            return max_advantage, best_move
-        else:
-            min_advantage = math.inf
-            best_move = None
-            for move in self._get_moves_to_evaluate(color.opposite()):
-                move_success = self._move(move)
-                if move_success:
-                    advantage, _ = self._run_minimax(color, depth - 1, move, alpha, beta)
-                    self._game.undo_move()
-                    if advantage < min_advantage:
-                        min_advantage = advantage
-                        best_move = None
-                    if advantage <= alpha:
-                        break
-                    beta = min(beta, advantage)
-            return min_advantage, best_move
+        max_advantage = -math.inf
+        best_move = None
+        for move in self._get_moves_to_evaluate(color):
+            move_success = self._move(move)
+            if move_success:
+                advantage, _ = self._run_minimax(color.opposite(), depth - 1, move, -beta, -alpha)
+                advantage = -advantage
+                self._game.undo_move()
+                if advantage > max_advantage:
+                    max_advantage = advantage
+                    best_move = move
+                if advantage >= beta:
+                    break
+                alpha = max(alpha, max_advantage)
+        return max_advantage, best_move
 
     def _evaluate(self, color: Color) -> int:
         scores = [0, 0]
