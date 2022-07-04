@@ -1,3 +1,4 @@
+from typing import Iterable
 from typing import List
 
 import math
@@ -6,7 +7,6 @@ import time
 from chess.game.color import Color
 from chess.game.constants import GamePhase
 from chess.game.game import Game
-from chess.game.game import Result
 from chess.game.move import Move
 
 _CHECKMATE_ADVANTAGE = 500
@@ -45,7 +45,7 @@ class MiniMaxBot:
 
     def _run_minimax(self, color: Color, depth: int, last_move: Move, alpha, beta) -> float:
         if depth == 0:
-            for move in self._get_moves_to_evaluate(color):
+            for move in self._get_available_moves(color):
                 if self._move(move):
                     self._undo_move()
                     self._processed_combinations = self._processed_combinations + 1
@@ -108,10 +108,15 @@ class MiniMaxBot:
         return success
 
     def _move(self, move: Move) -> bool:
-        return self._game.try_move(move)
+        return self._game.bot_move(move)
 
     def _undo_move(self):
-        self._game.undo_move()
+        self._game.bot_undo_move()
+
+    def _get_available_moves(self, color: Color) -> Iterable[Move]:
+        for square, piece in self._game.board().get_pieces_by_color(color):
+            for move in piece.get_available_moves(square, self._game.board()):
+                yield move
 
     def _get_moves_to_evaluate(self, color: Color) -> List[Move]:
         moves = list()
