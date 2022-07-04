@@ -44,33 +44,54 @@ class MiniMaxBot:
         return best_move
 
     def _run_minimax(self, color: Color, depth: int, last_move: Move, alpha, beta) -> float:
-        if self._game.result() == Result.STALEMATE:
-            return 0, last_move
-        if self._game.result() == Result.CHECKMATE:
-            advantage = (
-                -_CHECKMATE_ADVANTAGE if color == self._color
-                else _CHECKMATE_ADVANTAGE)
-            return advantage, last_move
         if depth == 0:
-            # print(self._game.get_current_moves())
-            self._processed_combinations = self._processed_combinations + 1
-            advantage = self._evaluate(self._color)
-            return advantage, last_move
+            for move in self._get_moves_to_evaluate(color):
+                if self._move(move):
+                    self._undo_move()
+                    self._processed_combinations = self._processed_combinations + 1
+                    advantage = self._evaluate(self._color)
+                    return advantage, last_move
+            # No valid moves
+            if self._game.is_check_after_move(color, last_move):
+                # Checkmate
+                # print("   CHECKMATE")
+                # print(self._game.board().to_string())
+                advantage = (
+                    -_CHECKMATE_ADVANTAGE if color == self._color
+                    else _CHECKMATE_ADVANTAGE)
+                return advantage, last_move
+            else:
+                # Stalemate
+                return 0, last_move
 
         max_advantage = -math.inf
         best_move = None
+        moved_made = 0
         for move in self._get_moves_to_evaluate(color):
-            move_success = self._move(move)
+            move_success = self._move_and_record(move)
             if move_success:
+                moved_made += 1
                 advantage, _ = self._run_minimax(color.opposite(), depth - 1, move, -beta, -alpha)
                 advantage = -advantage
-                self._game.undo_move()
+                self._undo_move()
                 if advantage > max_advantage:
                     max_advantage = advantage
                     best_move = move
                 if advantage >= beta:
                     break
                 alpha = max(alpha, max_advantage)
+
+        # Current player doesn't have legal moves
+        # This is either a checkmate or a stalemate
+        if moved_made == 0:
+            if self._game.is_check_after_move(color, last_move):
+                advantage = (
+                    -_CHECKMATE_ADVANTAGE if color == self._color
+                    else _CHECKMATE_ADVANTAGE)
+                return advantage, last_move
+            else:
+                return 0, last_move
+
         return max_advantage, best_move
 
     def _evaluate(self, color: Color) -> int:
@@ -80,11 +101,17 @@ class MiniMaxBot:
             scores[idx] += piece.material_value() + piece.position_value(square, GamePhase.MIDDLE_GAME)
         return scores[color.value] - scores[color.opposite().value]
 
-    def _move(self, move: Move) -> bool:
-        success = self._game.try_move(move)
+    def _move_and_record(self, move: Move) -> bool:
+        success = self._move(move)
         if success:
             self._processed_moves = self._processed_moves + 1
         return success
+
+    def _move(self, move: Move) -> bool:
+        return self._game.try_move(move)
+
+    def _undo_move(self):
+        self._game.undo_move()
 
     def _get_moves_to_evaluate(self, color: Color) -> List[Move]:
         moves = list()

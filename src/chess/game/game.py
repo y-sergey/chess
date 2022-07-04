@@ -72,6 +72,14 @@ class Game:
         self._update_game_state(move)
         return True
 
+    def bot_move(self, move: Move) -> bool:
+        self._apply_move(move)
+        if not self._is_last_move_valid(self._turn, move, True):
+            self._undo_move()
+            return False
+        self._turn = self._turn.opposite()
+        return True
+
     def move(self, move: Move) -> None:
         self._apply_move(move)
         self._save_game_state()
@@ -81,9 +89,13 @@ class Game:
         self._undo_move()
         self._restore_game_state()
 
+    def bot_undo_move(self) -> None:
+        self._undo_move()
+        self._turn = self._turn.opposite()
+
     def _update_game_state(self, move: Move) -> None:
         next_player = self._turn.opposite()
-        self._is_check = self._is_check_after_move(next_player, move)
+        self._is_check = self.is_check_after_move(next_player, move)
         opponent_has_valid_moves = self._has_valid_moves(next_player)
         if not opponent_has_valid_moves:
             self._result = Result.CHECKMATE if self._is_check else Result.STALEMATE
@@ -142,7 +154,7 @@ class Game:
             king = self._board.get_piece_by_square(king_square)
             return not king.is_threatened_on_line(king_square, move.source, self._board)
 
-    def _is_check_after_move(self, color: Color, move: Move) -> bool:
+    def is_check_after_move(self, color: Color, move: Move) -> bool:
         moved_square = move.dest
         moved_piece = self._board.get_piece_by_square(moved_square)
         if moved_piece.name() == Piece.KING and moved_piece.is_castle_move(move.source, move.dest):
