@@ -78,6 +78,12 @@ def run_game():
         'f1c4', 'a6a5'
     ]
 
+    fools_mate_moves_black = [
+        'a2a3', 'e7e5',
+        'a3a4', 'f8c5',
+        'a4a5', 'd8h4'
+    ]
+
     scholar_mate_moves = [
         'e2e4', 'f7f6',
         'd2d4', 'g7g5'
@@ -89,7 +95,7 @@ def run_game():
         'g1f3', 'b8c6'
     ]
 
-    initial_moves = []
+    initial_moves = fools_mate_moves_black
     for move in initial_moves:
         print(f'\n\nMoving {move}')
         src, dst, promo_piece = get_move(game, move) or (None, None, None)
